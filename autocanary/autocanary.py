@@ -25,14 +25,14 @@ class AutoCanaryGui(QtGui.QWidget):
             uid = seckey['uid']
             if len(uid) >= 53:
                 uid = '{0}...'.format(uid[:50])
-            keyid = seckey['keyid'][-8:]
-            text = '{0} [{1}]'.format(uid, keyid)
+            fp = seckey['fp'][-8:]
+            text = '{0} [{1}]'.format(uid, fp)
             self.key_selection.addItem(text)
-        keyid = self.settings.get_keyid()
-        if keyid:
+        fp = self.settings.get_fp()
+        if fp:
             key_i = 0
             for i, seckey in enumerate(seckeys):
-                if seckey['keyid'] == keyid:
+                if seckey['fp'] == fp:
                     key_i = i
             self.key_selection.setCurrentIndex(key_i)
 
@@ -78,8 +78,8 @@ class AutoCanaryGui(QtGui.QWidget):
 
         # sign the file
         key_i = self.key_selection.currentIndex()
-        keyid = self.gpg.seckeys_list()[key_i]['keyid']
-        signed_message = self.gpg.sign(text, keyid)
+        fp = self.gpg.seckeys_list()[key_i]['fp']
+        signed_message = self.gpg.sign(text, fp)
 
         if signed_message:
             # todo: build a dialog to display the signed message

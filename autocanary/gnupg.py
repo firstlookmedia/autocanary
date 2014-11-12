@@ -7,7 +7,7 @@ class GnuPG(object):
         if system == 'Darwin':
             self.gpg_path = '/usr/local/bin/gpg'
         elif system == 'Linux':
-            self.gpg_path = '/usr/bin/gpg'
+            self.gpg_path = '/usr/bin/gpg2'
 
         self.gpg_command = [self.gpg_path, '--batch', '--no-tty']
 
@@ -24,13 +24,13 @@ class GnuPG(object):
         for line in gpg_output:
             if line.startswith('sec:'):
                 vals = line.split(':')
-                keyid = vals[4]
+                fp = vals[4]
                 uid = vals[9]
-                seckeys.append({'keyid': keyid, 'uid':uid})
+                seckeys.append({'fp': fp, 'uid':uid})
 
         return seckeys
 
-    def sign(self, text, signing_keyid):
+    def sign(self, text, signing_fp):
         tempdir = tempfile.mkdtemp()
 
         # write message to file
@@ -39,7 +39,7 @@ class GnuPG(object):
 
         # sign the file
         try:
-            subprocess.check_call(self.gpg_command + ['--use-agent', '--default-key', signing_keyid, '--clearsign', filename])
+            subprocess.check_call(self.gpg_command + ['--use-agent', '--default-key', signing_fp, '--clearsign', filename])
         except subprocess.CalledProcessError:
             shutil.rmtree(tempdir)
             return False
@@ -50,4 +50,3 @@ class GnuPG(object):
         shutil.rmtree(tempdir)
 
         return signed_message
-

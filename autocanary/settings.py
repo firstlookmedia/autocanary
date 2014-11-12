@@ -14,11 +14,11 @@ class Settings(object):
     def set_text(self, text):
         self.settings['text'] = text
 
-    def get_keyid(self):
-        return self.settings['keyid']
+    def get_fp(self):
+        return self.settings['fp']
 
-    def set_keyid(self, fp):
-        self.settings['keyid'] = keyid
+    def set_fp(self, fp):
+        self.settings['fp'] = fp
 
     def load(self):
         if os.path.isfile(self.settings_path):
@@ -31,7 +31,7 @@ class Settings(object):
 (Name of general counsel)
 General Counsel
 (Name of organization)""",
-                'keyid': None
+                'fp': None
             }
 
     def save(self):
