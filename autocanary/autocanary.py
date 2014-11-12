@@ -78,8 +78,8 @@ class AutoCanaryGui(QtGui.QWidget):
 
         # sign the file
         key_i = self.key_selection.currentIndex()
-        fp = self.gpg.seckeys_list()[key_i]['fp']
-        signed_message = self.gpg.sign(text, fp)
+        keyid = self.gpg.seckeys_list()[key_i]['keyid']
+        signed_message = self.gpg.sign(text, keyid)
 
         if signed_message:
             # todo: build a dialog to display the signed message
