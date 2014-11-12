@@ -22,11 +22,23 @@ class GnuPG(object):
 
         seckeys = []
         for line in gpg_output:
-            if line.startswith('sec:'):
-                vals = line.split(':')
-                fp = vals[4]
-                uid = vals[9]
-                seckeys.append({'fp': fp, 'uid':uid})
+            if line.startswith('fpr:'):
+                fp = line.split(':')[9]
+
+                uids = []
+                gpg_output2 = subprocess.check_output(self.gpg_command + ['--fingerprint', '--with-colons', '--list-keys', fp]).split('\n')
+                for line in gpg_output2:
+                    if line.startswith('pub:'):
+                        validity = line.split(':')[1]
+                    if line.startswith('uid:'):
+                        vals = line.split(':')
+                        uid_validity = vals[1]
+                        uid = vals[9]
+                        if uid_validity == '-':
+                            uids.append(uid)
+
+                if validity == '-':
+                    seckeys.append({'fp': fp, 'uid':uids[0]})
 
         return seckeys
 
