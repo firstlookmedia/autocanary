@@ -2,6 +2,7 @@ import sys, datetime, platform
 from PyQt4 import QtCore, QtGui
 from gnupg import GnuPG
 from settings import Settings
+import common
 
 class AutoCanaryGui(QtGui.QWidget):
 
@@ -11,6 +12,7 @@ class AutoCanaryGui(QtGui.QWidget):
         self.gpg = gpg
         self.settings = Settings()
         self.setWindowTitle('AutoCanary')
+        self.setWindowIcon(QtGui.QIcon(common.get_image_path('icon.png')))
 
         # canary text box
         self.textbox = QtGui.QTextEdit()
@@ -18,7 +20,6 @@ class AutoCanaryGui(QtGui.QWidget):
 
         # key selection
         seckeys = gpg.seckeys_list()
-        print seckeys
         self.key_selection = QtGui.QComboBox()
         for seckey in seckeys:
             uid = seckey['uid']
@@ -89,6 +90,7 @@ class AutoCanaryGui(QtGui.QWidget):
 def alert(msg, icon=QtGui.QMessageBox.Warning):
     dialog = QtGui.QMessageBox()
     dialog.setWindowTitle('AutoCanary')
+    dialog.setWindowIcon(QtGui.QIcon(common.get_image_path('icon.png')))
     dialog.setText(msg)
     dialog.setIcon(icon)
     dialog.exec_()
@@ -123,4 +125,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

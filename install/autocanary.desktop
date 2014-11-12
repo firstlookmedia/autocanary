@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=AutoCanary
+Comment=
+Exec=/usr/bin/autocanary
+Terminal=false
+Type=Application
+Icon=/usr/share/pixmaps/autocanary.xpm
+Categories=Utility;
+Name[en_US]=AutoCanary
