@@ -1,4 +1,4 @@
-import sys
+import sys, datetime
 from PyQt4 import QtCore, QtGui
 from gnupg import GnuPG
 from settings import Settings
@@ -26,11 +26,20 @@ class AutoCanaryGui(QtGui.QWidget):
             keyid = seckey['fp'][-8:]
             text = '{0} [{1}]'.format(uid, keyid)
             self.key_selection.addItem(text)
+        fp = self.settings.get_fp()
+        if fp:
+            key_i = 0
+            for i, seckey in enumerate(seckeys):
+                if seckey['fp'] == fp:
+                    key_i = i
+            self.key_selection.setCurrentIndex(key_i)
 
         # buttons
         self.buttons_layout = QtGui.QHBoxLayout()
-        self.sign_save_button = QtGui.QPushButton('Save & Sign')
+        self.sign_save_button = QtGui.QPushButton('Save and Sign')
+        self.sign_save_button.clicked.connect(self.sign_save_clicked)
         self.sign_once = QtGui.QPushButton('One-Time Sign')
+        self.sign_once.clicked.connect(self.sign_once_clicked)
         self.buttons_layout.addWidget(self.sign_save_button)
         self.buttons_layout.addWidget(self.sign_once)
 
@@ -42,6 +51,39 @@ class AutoCanaryGui(QtGui.QWidget):
         self.setLayout(self.layout)
         self.show()
 
+    def sign_save_clicked(self):
+        self.save()
+        self.sign()
+
+    def sign_once_clicked(self):
+        self.sign()
+
+    def save(self):
+        text = self.textbox.toPlainText()
+        self.settings.set_text(text)
+
+        key_i = self.key_selection.currentIndex()
+        fp = self.gpg.seckeys_list()[key_i]['fp']
+        self.settings.set_fp(fp)
+
+        self.settings.save()
+
+    def sign(self):
+        # replace date in text
+        text = self.textbox.toPlainText()
+        current_date = datetime.date.today().strftime("%B %d, %Y")
+        text = text.replace('[[DATE]]', current_date)
+
+        # sign the file
+        key_i = self.key_selection.currentIndex()
+        fp = self.gpg.seckeys_list()[key_i]['fp']
+        signed_message = self.gpg.sign(text, fp)
+
+        if signed_message:
+            # todo: build a dialog to display the signed message
+            alert(signed_message)
+        else:
+            alert('Failed to sign message.')
 
 def alert(msg, icon=QtGui.QMessageBox.Warning):
     dialog = QtGui.QMessageBox()
@@ -49,7 +91,6 @@ def alert(msg, icon=QtGui.QMessageBox.Warning):
     dialog.setText(msg)
     dialog.setIcon(icon)
     dialog.exec_()
-
 
 def main():
     # start the app
