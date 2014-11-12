@@ -10,7 +10,7 @@ class Settings(object):
 
     def get_text(self):
         return self.settings['text']
-    
+
     def set_text(self, text):
         self.settings['text'] = text
 
@@ -26,10 +26,13 @@ class Settings(object):
         else:
             # default settings
             self.settings = {
-                'text': 'As of [[DATE]], (name of organization) has never received or complied with government requests for information.\n\n(name of general counsel)\nGeneral Counsel\n(name of organization)',
+                'text': """As of [[DATE]], (name of organization) has not received any National Security Letters or FISA court orders, and we have not been subject to any gag order by a FISA court, or any other similar court of any government. (Name of organization) has never placed any backdoors in our hardware or software and has not received any requests to do so. (Name of organization) has never disclosed any user communications to any third party.
+
+(Name of general counsel)
+General Counsel
+(Name of organization)""",
                 'keyid': None
             }
 
     def save(self):
         pickle.dump(self.settings, open(self.settings_path, 'w'))
-
