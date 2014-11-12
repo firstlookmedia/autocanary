@@ -1,9 +1,14 @@
-import subprocess, os, tempfile, shutil
+import subprocess, os, platform, tempfile, shutil
 
 class GnuPG(object):
 
     def __init__(self):
-        self.gpg_path = '/usr/local/bin/gpg'
+        system = platform.system()
+        if system == 'Darwin':
+            self.gpg_path = '/usr/local/bin/gpg'
+        elif system == 'Linux':
+            self.gpg_path = '/usr/bin/gpg'
+
         self.gpg_command = [self.gpg_path, '--batch', '--no-tty']
 
         # for suppressing output
@@ -17,22 +22,15 @@ class GnuPG(object):
 
         seckeys = []
         for line in gpg_output:
-            if line.startswith('fpr:'):
-                fp = line.split(':')[9]
-                seckeys.append({'fp': fp, 'uids':[]})
-
-        for i,seckey in enumerate(seckeys):
-            fp = seckey['fp']
-            gpg_output = subprocess.check_output(self.gpg_command + ['--with-colons', '--list-secret-keys', fp]).split('\n')
-
-            for line in gpg_output:
-                if line.startswith('uid:'):
-                    uid = line.split(':')[9]
-                    seckeys[i]['uids'].append(uid)
+            if line.startswith('sec:'):
+                vals = line.split(':')
+                keyid = vals[4]
+                uid = vals[9]
+                seckeys.append({'keyid': keyid, 'uid':uid})
 
         return seckeys
 
-    def sign(self, text, signing_fp):
+    def sign(self, text, signing_keyid):
         tempdir = tempfile.mkdtemp()
 
         # write message to file
@@ -41,7 +39,7 @@ class GnuPG(object):
 
         # sign the file
         try:
-            subprocess.check_call(self.gpg_command + ['--use-agent', '--default-key', signing_fp, '--clearsign', filename])
+            subprocess.check_call(self.gpg_command + ['--use-agent', '--default-key', signing_keyid, '--clearsign', filename])
         except subprocess.CalledProcessError:
             shutil.rmtree(tempdir)
             return False

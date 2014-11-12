@@ -14,11 +14,11 @@ class Settings(object):
     def set_text(self, text):
         self.settings['text'] = text
 
-    def get_fp(self):
-        return self.settings['fp']
+    def get_keyid(self):
+        return self.settings['keyid']
 
-    def set_fp(self, fp):
-        self.settings['fp'] = fp
+    def set_keyid(self, fp):
+        self.settings['keyid'] = keyid
 
     def load(self):
         if os.path.isfile(self.settings_path):
@@ -27,7 +27,7 @@ class Settings(object):
             # default settings
             self.settings = {
                 'text': 'As of [[DATE]], (name of organization) has never received or complied with government requests for information.\n\n(name of general counsel)\nGeneral Counsel\n(name of organization)',
-                'fp': None
+                'keyid': None
             }
 
     def save(self):

@@ -1,4 +1,4 @@
-import sys, datetime
+import sys, datetime, platform
 from PyQt4 import QtCore, QtGui
 from gnupg import GnuPG
 from settings import Settings
@@ -18,19 +18,20 @@ class AutoCanaryGui(QtGui.QWidget):
 
         # key selection
         seckeys = gpg.seckeys_list()
+        print seckeys
         self.key_selection = QtGui.QComboBox()
         for seckey in seckeys:
-            uid = seckey['uids'][0]
+            uid = seckey['uid']
             if len(uid) >= 53:
                 uid = '{0}...'.format(uid[:50])
-            keyid = seckey['fp'][-8:]
+            keyid = seckey['keyid'][-8:]
             text = '{0} [{1}]'.format(uid, keyid)
             self.key_selection.addItem(text)
-        fp = self.settings.get_fp()
-        if fp:
+        keyid = self.settings.get_keyid()
+        if keyid:
             key_i = 0
             for i, seckey in enumerate(seckeys):
-                if seckey['fp'] == fp:
+                if seckey['keyid'] == keyid:
                     key_i = i
             self.key_selection.setCurrentIndex(key_i)
 
@@ -98,13 +99,22 @@ def main():
 
     # initialize and check for gpg and a secret key
     gpg = GnuPG()
-    if not gpg.is_gpg_available():
-        alert('GPG doesn\'t seem to be installed. Install <a href="https://gpgtools.org/">GPGTools</a>, generate a key, and run AutoCanary again.')
-        sys.exit(0)
     seckeys = gpg.seckeys_list()
-    if len(seckeys) == 0:
-        alert('You need an encryption key to use AutoCanary. Run the GPG Keychain program, generate a key, and run AutoCanary again.')
-        sys.exit(0)
+
+    system = platform.system()
+    if system == 'Darwin':
+        if not gpg.is_gpg_available():
+            alert('GPG doesn\'t seem to be installed. Install <a href="https://gpgtools.org/">GPGTools</a>, generate a key, and run AutoCanary again.')
+            sys.exit(0)
+
+        if len(seckeys) == 0:
+            alert('You need an encryption key to use AutoCanary. Run the GPG Keychain program, generate a key, and run AutoCanary again.')
+            sys.exit(0)
+
+    elif system == 'Linux':
+        if len(seckeys) == 0:
+            alert('You need an encryption key to use AutoCanary. Generate a key, and run AutoCanary again.')
+            sys.exit(0)
 
     # start the gui
     gui = AutoCanaryGui(app, gpg)
