@@ -17,19 +17,20 @@ class GnuPG(object):
     def seckeys_list(self):
         gpg_output = subprocess.check_output(self.gpg_command + ['--fingerprint', '--with-colons', '--list-secret-keys']).split('\n')
         
-        seckeys = {}
+        seckeys = []
         for line in gpg_output:
             if line.startswith('fpr:'):
                 fp = line.split(':')[9]
-                seckeys[fp] = []
+                seckeys.append({'fp': fp, 'uids':[]})
 
-        for fp in seckeys:
+        for i,seckey in enumerate(seckeys):
+            fp = seckey['fp']
             gpg_output = subprocess.check_output(self.gpg_command + ['--with-colons', '--list-secret-keys', fp]).split('\n')
 
             for line in gpg_output:
                 if line.startswith('uid:'):
                     uid = line.split(':')[9]
-                    seckeys[fp].append(uid)
+                    seckeys[i]['uids'].append(uid)
 
         return seckeys
 

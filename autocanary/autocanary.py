@@ -1,23 +1,31 @@
 import sys
 from PyQt4 import QtCore, QtGui
-import gnupg
+from gnupg import GnuPG
+from settings import Settings
 
 class AutoCanaryGui(QtGui.QWidget):
+
     def __init__(self, app, gpg):
         super(AutoCanaryGui, self).__init__()
         self.app = app
         self.gpg = gpg
+        self.settings = Settings()
         self.setWindowTitle('AutoCanary')
 
         # canary text box
         self.textbox = QtGui.QTextEdit()
+        self.textbox.setText(self.settings.get_text())
 
         # key selection
-        self.key_layout = QtGui.QHBoxLayout()
-        self.key_label = QtGui.QLabel('Sign statement with')
+        seckeys = gpg.seckeys_list()
         self.key_selection = QtGui.QComboBox()
-        self.key_layout.addWidget(self.key_label)
-        self.key_layout.addWidget(self.key_selection)
+        for seckey in seckeys:
+            uid = seckey['uids'][0]
+            if len(uid) >= 53:
+                uid = '{0}...'.format(uid[:50])
+            keyid = seckey['fp'][-8:]
+            text = '{0} [{1}]'.format(uid, keyid)
+            self.key_selection.addItem(text)
 
         # buttons
         self.buttons_layout = QtGui.QHBoxLayout()
@@ -29,7 +37,7 @@ class AutoCanaryGui(QtGui.QWidget):
         # layout
         self.layout = QtGui.QVBoxLayout()
         self.layout.addWidget(self.textbox)
-        self.layout.addLayout(self.key_layout)
+        self.layout.addWidget(self.key_selection)
         self.layout.addLayout(self.buttons_layout)
         self.setLayout(self.layout)
         self.show()
@@ -48,7 +56,7 @@ def main():
     app = QtGui.QApplication(sys.argv)
 
     # initialize and check for gpg and a secret key
-    gpg = gnupg.GnuPG()
+    gpg = GnuPG()
     if not gpg.is_gpg_available():
         alert('GPG doesn\'t seem to be installed. Install <a href="https://gpgtools.org/">GPGTools</a>, generate a key, and run AutoCanary again.')
         sys.exit(0)
