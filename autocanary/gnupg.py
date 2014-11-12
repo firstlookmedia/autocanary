@@ -48,7 +48,7 @@ class GnuPG(object):
 
         # read the signed message
         signed_filename = '{0}/message.asc'.format(tempdir)
-        signed_message open(signed_filename, 'r').read()
+        signed_message = open(signed_filename, 'r').read()
         shutil.rmtree(tempdir)
 
         return signed_message
