@@ -1,0 +1,3 @@
+# AutoCanary
+
+A cool project.
