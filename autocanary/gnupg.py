@@ -34,10 +34,10 @@ class GnuPG(object):
                         vals = line.split(':')
                         uid_validity = vals[1]
                         uid = vals[9]
-                        if uid_validity == '-':
+                        if uid_validity not in ['i', 'd', 'r', 'e']:
                             uids.append(uid)
 
-                if validity == '-':
+                if validity not in ['i', 'd', 'r', 'e']:
                     seckeys.append({'fp': fp, 'uid':uids[0]})
 
         return seckeys
