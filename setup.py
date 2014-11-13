@@ -1,14 +1,12 @@
 import os, sys, platform
-from glob import glob
+system = platform.system()
 
-try:
-    from setuptools import setup
-except ImportError:
+if system == "Windows":
     from distutils.core import setup
+else:
+    from setuptools import setup
 
 version = open('version').read().strip()
-
-system = platform.system()
 
 if system == 'Linux':
     setup(
@@ -42,3 +40,16 @@ elif system == 'Darwin':
         setup_requires=['py2app'],
     )
 
+elif system == 'Windows':
+    import py2exe
+    setup(
+        name='AutoCanary',
+        windows=[{'script':'autocanary-launcher.py'}],
+        options={
+            'py2exe': {
+                'includes': ['sip', 'PyQt4'],
+                'bundle_files': 1,
+                'compressed': True
+            }
+        }
+    )
