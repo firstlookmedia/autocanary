@@ -8,14 +8,17 @@ class GnuPG(object):
             self.gpg_path = '/usr/local/bin/gpg'
         elif system == 'Linux':
             self.gpg_path = '/usr/bin/gpg2'
+        elif system == 'Windows':
+            self.gpg_path = '{0}\GNU\GnuPG\gpg2.exe'.format(os.environ['ProgramFiles(x86)'])
 
         self.gpg_command = [self.gpg_path, '--batch', '--no-tty']
 
-        # for suppressing output
-        self.devnull = open('/dev/null', 'w')
-
     def is_gpg_available(self):
-        return os.path.isfile(self.gpg_path) and os.access(self.gpg_path, os.X_OK)
+        system = platform.system()
+        if system == 'Windows':
+            return os.path.isfile(self.gpg_path)
+        else:
+            return os.path.isfile(self.gpg_path) and os.access(self.gpg_path, os.X_OK)
 
     def seckeys_list(self):
         gpg_output = subprocess.check_output(self.gpg_command + ['--fingerprint', '--with-colons', '--list-secret-keys']).split('\n')

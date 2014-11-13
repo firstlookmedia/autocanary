@@ -1,12 +1,18 @@
-import os, pickle
+import os, pickle, platform
 
 class Settings(object):
 
     def __init__(self):
-        home = os.path.expanduser("~")
-        self.settings_path = '{0}/{1}'.format(home, '.autocanary')
+        system = platform.system()
+        if system == 'Windows':
+            appdata = os.environ['APPDATA']
+            self.settings_path = '{0}\\autocanary_settings'.format(appdata)
+            
+        else:
+            home = os.path.expanduser("~")
+            self.settings_path = '{0}/{1}'.format(home, '.autocanary')
+        
         self.load()
-
 
     def get_text(self):
         return self.settings['text']
