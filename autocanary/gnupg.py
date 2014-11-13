@@ -3,25 +3,29 @@ import subprocess, os, platform, tempfile, shutil
 class GnuPG(object):
 
     def __init__(self):
-        system = platform.system()
-        if system == 'Darwin':
+        self.system = platform.system()
+        self.creationflags = 0
+        if self.system == 'Darwin':
             self.gpg_path = '/usr/local/bin/gpg'
-        elif system == 'Linux':
+        elif self.system == 'Linux':
             self.gpg_path = '/usr/bin/gpg2'
-        elif system == 'Windows':
+        elif self.system == 'Windows':
+            import win32process
+            self.creationflags = win32process.CREATE_NO_WINDOW
             self.gpg_path = '{0}\GNU\GnuPG\gpg2.exe'.format(os.environ['ProgramFiles(x86)'])
 
         self.gpg_command = [self.gpg_path, '--batch', '--no-tty']
 
     def is_gpg_available(self):
-        system = platform.system()
-        if system == 'Windows':
+        if self.system == 'Windows':
             return os.path.isfile(self.gpg_path)
         else:
             return os.path.isfile(self.gpg_path) and os.access(self.gpg_path, os.X_OK)
 
     def seckeys_list(self):
-        gpg_output = subprocess.check_output(self.gpg_command + ['--fingerprint', '--with-colons', '--list-secret-keys']).split('\n')
+        p = subprocess.Popen(self.gpg_command + ['--fingerprint', '--with-colons', '--list-secret-keys'], stdout=subprocess.PIPE, creationflags=self.creationflags)
+        (stdoutdata, stderrdata) = p.communicate()
+        gpg_output = stdoutdata.split('\n')
 
         seckeys = []
         for line in gpg_output:
@@ -29,7 +33,10 @@ class GnuPG(object):
                 fp = line.split(':')[9]
 
                 uids = []
-                gpg_output2 = subprocess.check_output(self.gpg_command + ['--fingerprint', '--with-colons', '--list-keys', fp]).split('\n')
+                p = subprocess.Popen(self.gpg_command + ['--fingerprint', '--with-colons', '--list-keys', fp], stdout=subprocess.PIPE, creationflags=self.creationflags)
+                (stdoutdata, stderrdata) = p.communicate()
+                gpg_output2 = stdoutdata.split('\n')
+                
                 for line in gpg_output2:
                     if line.startswith('pub:'):
                         validity = line.split(':')[1]
@@ -53,9 +60,9 @@ class GnuPG(object):
         open(filename, 'w').write(text)
 
         # sign the file
-        try:
-            subprocess.check_call(self.gpg_command + ['--use-agent', '--default-key', signing_fp, '--clearsign', filename])
-        except subprocess.CalledProcessError:
+        p = subprocess.Popen(self.gpg_command + ['--use-agent', '--default-key', signing_fp, '--clearsign', filename], creationflags=self.creationflags)
+        returncode = p.wait()
+        if returncode != 0:
             shutil.rmtree(tempdir)
             return False
 
