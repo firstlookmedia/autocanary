@@ -2,6 +2,7 @@ import sys, datetime, platform
 from PyQt4 import QtCore, QtGui
 from gnupg import GnuPG
 from settings import Settings
+from output_dialog import OutputDialog
 import common
 
 class AutoCanaryGui(QtGui.QWidget):
@@ -127,12 +128,7 @@ class AutoCanaryGui(QtGui.QWidget):
         text = text.replace('[[DATE]]', self.get_date_string())
 
         # add headers
-        message = 'Date: {0}\nExpires: {1}\nStatus: {2}\n\n{3}'.format(
-            date,
-            expires,
-            status,
-            text
-        )
+        message = 'Date: {0}\nExpires after: {1}\nStatus: {2}\n\n{3}'.format(date, expires, status, text)
 
         # sign the file
         key_i = self.key_selection.currentIndex()
@@ -140,8 +136,9 @@ class AutoCanaryGui(QtGui.QWidget):
         signed_message = self.gpg.sign(message, fp)
 
         if signed_message:
-            # todo: build a dialog to display the signed message
-            alert(signed_message)
+            # display signed message
+            dialog = OutputDialog(signed_message)
+            dialog.exec_()
         else:
             alert('Failed to sign message.')
 
