@@ -14,6 +14,40 @@ class AutoCanaryGui(QtGui.QWidget):
         self.setWindowTitle('AutoCanary')
         self.setWindowIcon(QtGui.QIcon(common.get_image_path('icon.png')))
 
+        # current date
+        self.date_layout = QtGui.QHBoxLayout()
+        self.date_label = QtGui.QLabel('Date')
+        self.date = QtGui.QCalendarWidget()
+        self.date.setVerticalHeaderFormat(QtGui.QCalendarWidget.NoVerticalHeader)
+        self.date_layout.addWidget(self.date_label)
+        self.date_layout.addWidget(self.date)
+
+        # expires
+        self.expires_layout = QtGui.QHBoxLayout()
+        self.expires_label = QtGui.QLabel('Expires after')
+        self.expires = QtGui.QComboBox()
+        expires_options = ['1 week', '2 weeks', '1 month', '3 months', '6 months', '1 year']
+        for option in expires_options:
+            self.expires.addItem(option)
+        option = self.settings.get_expires()
+        if option in expires_options:
+            self.expires.setCurrentIndex(expires_options.index(option))
+        self.expires_layout.addWidget(self.expires_label)
+        self.expires_layout.addWidget(self.expires)
+
+        # status
+        self.status_layout = QtGui.QHBoxLayout()
+        self.status_label = QtGui.QLabel('Status')
+        self.status = QtGui.QComboBox()
+        status_options = ["All good", "It's complicated", "It's bad"]
+        for option in status_options:
+            self.status.addItem(option)
+        option = self.settings.get_status()
+        if option in status_options:
+            self.status.setCurrentIndex(status_options.index(option))
+        self.status_layout.addWidget(self.status_label)
+        self.status_layout.addWidget(self.status)
+
         # canary text box
         self.textbox = QtGui.QTextEdit()
         self.textbox.setText(self.settings.get_text())
@@ -47,6 +81,9 @@ class AutoCanaryGui(QtGui.QWidget):
 
         # layout
         self.layout = QtGui.QVBoxLayout()
+        self.layout.addLayout(self.date_layout)
+        self.layout.addLayout(self.expires_layout)
+        self.layout.addLayout(self.status_layout)
         self.layout.addWidget(self.textbox)
         self.layout.addWidget(self.key_selection)
         self.layout.addLayout(self.buttons_layout)
@@ -61,7 +98,14 @@ class AutoCanaryGui(QtGui.QWidget):
         self.sign()
 
     def save(self):
+        date = self.get_date_string()
+        expires = str(self.expires.currentText())
+        status = str(self.status.currentText())
         text = self.textbox.toPlainText()
+
+        self.settings.set_date(date)
+        self.settings.set_expires(expires)
+        self.settings.set_status(status)
         self.settings.set_text(text)
 
         key_i = self.key_selection.currentIndex()
@@ -70,16 +114,30 @@ class AutoCanaryGui(QtGui.QWidget):
 
         self.settings.save()
 
+    def get_date_string(self):
+        return self.date.selectedDate().toString('MMMM d, yyyy')
+
     def sign(self):
-        # replace date in text
+        date = self.get_date_string()
+        expires = str(self.expires.currentText())
+        status = str(self.status.currentText())
         text = self.textbox.toPlainText()
-        current_date = datetime.date.today().strftime("%B %d, %Y")
-        text = text.replace('[[DATE]]', current_date)
+
+        # replace date in text
+        text = text.replace('[[DATE]]', self.get_date_string())
+
+        # add headers
+        message = 'Date: {0}\nExpires: {1}\nStatus: {2}\n\n{3}'.format(
+            date,
+            expires,
+            status,
+            text
+        )
 
         # sign the file
         key_i = self.key_selection.currentIndex()
         fp = self.gpg.seckeys_list()[key_i]['fp']
-        signed_message = self.gpg.sign(text, fp)
+        signed_message = self.gpg.sign(message, fp)
 
         if signed_message:
             # todo: build a dialog to display the signed message
