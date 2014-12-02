@@ -134,7 +134,7 @@ class AutoCanaryGui(QtGui.QWidget):
 
         if signed_message:
             # display signed message
-            dialog = OutputDialog(signed_message)
+            dialog = OutputDialog(self.app, signed_message)
             dialog.exec_()
         else:
             common.alert('Failed to sign message.')

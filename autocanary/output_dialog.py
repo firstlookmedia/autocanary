@@ -1,11 +1,13 @@
+import platform
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import Qt
 import common
 
 class OutputDialog(QtGui.QDialog):
 
-    def __init__(self, signed_message):
+    def __init__(self, app, signed_message):
         super(OutputDialog, self).__init__()
+        self.app = app
         self.signed_message = signed_message
         self.setWindowTitle('Digitally Signed Canary Message')
         self.setWindowIcon(QtGui.QIcon(common.get_image_path('icon.png')))
@@ -55,7 +57,24 @@ class OutputDialog(QtGui.QDialog):
                 common.alert('Failed saving file:\n{0}'.format(filename))
     
     def copy_to_clipboard_clicked(self):
-        pass
+        if platform.system() == 'Windows':
+            # Qt's QClipboard isn't working in Windows
+            import ctypes
+            GMEM_DDESHARE = 0x2000
+            ctypes.windll.user32.OpenClipboard(None)
+            ctypes.windll.user32.EmptyClipboard()
+            hcd = ctypes.windll.kernel32.GlobalAlloc(GMEM_DDESHARE, len(bytes(self.signed_message))+1)
+            pch_data = ctypes.windll.kernel32.GlobalLock(hcd)
+            ctypes.cdll.msvcrt.strcpy(ctypes.c_char_p(pch_data), bytes(url))
+            ctypes.windll.kernel32.GlobalUnlock(hcd)
+            ctypes.windll.user32.SetClipboardData(1, hcd)
+            ctypes.windll.user32.CloseClipboard()
+        else:
+            clipboard = self.app.clipboard()
+            clipboard.setText(self.signed_message)
+
+        common.alert('Digitally signed cannary message copied to clipboard')
+        self.accept()
 
     def send_email_clicked(self):
         pass
