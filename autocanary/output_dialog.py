@@ -1,7 +1,6 @@
 import platform, tempfile
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import Qt
-from mailto import mailto
 import common
 
 class OutputDialog(QtGui.QDialog):
@@ -28,11 +27,8 @@ class OutputDialog(QtGui.QDialog):
         save_to_file_button.clicked.connect(self.save_to_file_clicked)
         copy_to_clipboard_button = QtGui.QPushButton('Copy to Clipboard')
         copy_to_clipboard_button.clicked.connect(self.copy_to_clipboard_clicked)
-        send_email_button = QtGui.QPushButton('Send Email')
-        send_email_button.clicked.connect(self.send_email_clicked)
         buttons_layout.addWidget(save_to_file_button)
         buttons_layout.addWidget(copy_to_clipboard_button)
-        buttons_layout.addWidget(send_email_button)
 
         # layout
         layout = QtGui.QVBoxLayout()
@@ -76,22 +72,4 @@ class OutputDialog(QtGui.QDialog):
 
         common.alert('Digitally signed cannary message copied to clipboard')
         self.accept()
-
-    def send_email_clicked(self):
-        (f, filename) = tempfile.mkstemp()
-        open(filename, 'w').write(self.signed_message)
-
-        # open email client
-        # TODO: make email attachment work
-        success = mailto(
-            address='',
-            subject='Digitally signed warrant canary',
-            body='Attached is a digitally signed warrant canary. Please post it to the website.',
-            attach=filename
-        )
-
-        if success:
-            self.accept()
-        else:
-            common.alert('Unable to open email client. Please save to file and send the email manually.')
 
