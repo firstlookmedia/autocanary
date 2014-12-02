@@ -6,7 +6,7 @@ class OutputDialog(QtGui.QDialog):
 
     def __init__(self, signed_message):
         super(OutputDialog, self).__init__()
-        self.setWindowTitle('AutoCanary')
+        self.setWindowTitle('Digitally Signed Canary Message')
         self.setWindowIcon(QtGui.QIcon(common.get_image_path('icon.png')))
         self.setWindowFlags(Qt.WindowCloseButtonHint)
         self.setModal(True)
