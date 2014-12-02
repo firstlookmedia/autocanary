@@ -137,15 +137,7 @@ class AutoCanaryGui(QtGui.QWidget):
             dialog = OutputDialog(signed_message)
             dialog.exec_()
         else:
-            alert('Failed to sign message.')
-
-def alert(msg, icon=QtGui.QMessageBox.Warning):
-    dialog = QtGui.QMessageBox()
-    dialog.setWindowTitle('AutoCanary')
-    dialog.setWindowIcon(QtGui.QIcon(common.get_image_path('icon.png')))
-    dialog.setText(msg)
-    dialog.setIcon(icon)
-    dialog.exec_()
+            common.alert('Failed to sign message.')
 
 def main():
     # start the app
@@ -157,28 +149,28 @@ def main():
     system = platform.system()
     if system == 'Darwin':
         if not gpg.is_gpg_available():
-            alert('GPG doesn\'t seem to be installed. Install <a href="https://gpgtools.org/">GPGTools</a>, generate a key, and run AutoCanary again.')
+            common.alert('GPG doesn\'t seem to be installed. Install <a href="https://gpgtools.org/">GPGTools</a>, generate a key, and run AutoCanary again.')
             sys.exit(0)
 
         seckeys = gpg.seckeys_list()
         if len(seckeys) == 0:
-            alert('You need an encryption key to use AutoCanary. Run the GPG Keychain program, generate a key, and run AutoCanary again.')
+            common.alert('You need an encryption key to use AutoCanary. Run the GPG Keychain program, generate a key, and run AutoCanary again.')
             sys.exit(0)
 
     elif system == 'Linux':
         seckeys = gpg.seckeys_list()
         if len(seckeys) == 0:
-            alert('You need an encryption key to use AutoCanary. Generate a key, and run AutoCanary again.')
+            common.alert('You need an encryption key to use AutoCanary. Generate a key, and run AutoCanary again.')
             sys.exit(0)
-    
+
     elif system == 'Windows':
         if not gpg.is_gpg_available():
-            alert('GPG doesn\'t seem to be installed. Install <a href="http://gpg4win.org/">Gpg4win</a>, generate a key, and run AutoCanary again.')
+            common.alert('GPG doesn\'t seem to be installed. Install <a href="http://gpg4win.org/">Gpg4win</a>, generate a key, and run AutoCanary again.')
             sys.exit(0)
 
         seckeys = gpg.seckeys_list()
         if len(seckeys) == 0:
-            alert('You need an encryption key to use AutoCanary. Run the Kleopatra program, generate a new personal OpenPGP key pair, and run AutoCanary again.')
+            common.alert('You need an encryption key to use AutoCanary. Run the Kleopatra program, generate a new personal OpenPGP key pair, and run AutoCanary again.')
             sys.exit(0)
 
     # start the gui

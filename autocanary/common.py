@@ -1,4 +1,5 @@
 import os, sys, inspect, platform
+from PyQt4 import QtCore, QtGui
 
 def get_autocanary_dir():
     if platform.system() == 'Darwin':
@@ -15,3 +16,12 @@ def get_image_path(filename):
     else:
         prefix = os.path.join(os.path.dirname(get_autocanary_dir()), 'share')
     return os.path.join(prefix, filename)
+
+def alert(msg, icon=QtGui.QMessageBox.Warning):
+    d = QtGui.QMessageBox()
+    d.setWindowTitle('AutoCanary')
+    d.setWindowIcon(QtGui.QIcon(get_image_path('icon.png')))
+    d.setText(msg)
+    d.setIcon(icon)
+    d.exec_()
+
