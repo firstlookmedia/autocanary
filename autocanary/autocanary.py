@@ -124,9 +124,6 @@ class AutoCanaryGui(QtGui.QWidget):
         status = str(self.status.currentText())
         text = self.textbox.toPlainText()
 
-        # replace date in text
-        text = text.replace('[[DATE]]', self.get_date_string())
-
         # add headers
         message = 'Date: {0}\nExpires after: {1}\nStatus: {2}\n\n{3}'.format(date, expires, status, text)
 

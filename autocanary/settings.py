@@ -48,7 +48,7 @@ class Settings(object):
                 'date': None,
                 'expires': None,
                 'status': None,
-                'text': """As of [[DATE]], (name of organization) has not received any National Security Letters or FISA court orders, and we have not been subject to any gag order by a FISA court, or any other similar court of any government. (Name of organization) has never placed any backdoors in our hardware or software and has not received any requests to do so. (Name of organization) has never disclosed any user communications to any third party.
+                'text': """As of the date posted above, (name of organization) has not received any National Security Letters or FISA court orders, and we have not been subject to any gag order by a FISA court, or any other similar court of any government. (Name of organization) has never placed any backdoors in our hardware or software and has not received any requests to do so. (Name of organization) has never disclosed any user communications to any third party.
 
 (Name of general counsel)
 General Counsel
