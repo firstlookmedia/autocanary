@@ -1,6 +1,7 @@
-import platform
+import platform, tempfile
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import Qt
+from mailto import mailto
 import common
 
 class OutputDialog(QtGui.QDialog):
@@ -77,5 +78,20 @@ class OutputDialog(QtGui.QDialog):
         self.accept()
 
     def send_email_clicked(self):
-        pass
+        (f, filename) = tempfile.mkstemp()
+        open(filename, 'w').write(self.signed_message)
+
+        # open email client
+        # TODO: make email attachment work
+        success = mailto(
+            address='',
+            subject='Digitally signed warrant canary',
+            body='Attached is a digitally signed warrant canary. Please post it to the website.',
+            attach=filename
+        )
+
+        if success:
+            self.accept()
+        else:
+            common.alert('Unable to open email client. Please save to file and send the email manually.')
 
