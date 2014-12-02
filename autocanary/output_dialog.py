@@ -6,6 +6,7 @@ class OutputDialog(QtGui.QDialog):
 
     def __init__(self, signed_message):
         super(OutputDialog, self).__init__()
+        self.signed_message = signed_message
         self.setWindowTitle('Digitally Signed Canary Message')
         self.setWindowIcon(QtGui.QIcon(common.get_image_path('icon.png')))
         self.setWindowFlags(Qt.WindowCloseButtonHint)
@@ -14,7 +15,7 @@ class OutputDialog(QtGui.QDialog):
         # signed message
         font = QtGui.QFont('Monospace')
         font.setStyleHint(QtGui.QFont.TypeWriter)
-        signed_message_label = QtGui.QLabel(signed_message)
+        signed_message_label = QtGui.QLabel(self.signed_message)
         signed_message_label.setWordWrap(True)
         signed_message_label.setFont(font)
 
@@ -38,12 +39,21 @@ class OutputDialog(QtGui.QDialog):
         self.show()
 
     def save_to_file_clicked(self):
-        filename = QtGui.QFileDialog.getSaveFileName(
-            caption='Save to File',
-            selectedFilter='*.asc'
-        )
-        print "Filename", filename
+        d = QtGui.QFileDialog(caption='Save to File')
+        d.setAcceptMode(QtGui.QFileDialog.AcceptSave)
+        d.setDefaultSuffix('asc')
+        d.setNameFilter('*.asc')
+        if d.exec_():
+            filename = d.selectedFiles()[0]
 
+            # save output to file
+            try:
+                open(filename, 'w').write(self.signed_message)
+                common.alert('Digitally signed cannary message saved to:\n{0}'.format(filename))
+                self.accept()
+            except:
+                common.alert('Failed saving file:\n{0}'.format(filename))
+    
     def copy_to_clipboard_clicked(self):
         pass
 
