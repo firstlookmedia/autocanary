@@ -1,4 +1,5 @@
 from PyQt4 import QtCore, QtGui
+from PyQt4.QtCore import Qt
 import common
 
 class OutputDialog(QtGui.QDialog):
@@ -7,6 +8,7 @@ class OutputDialog(QtGui.QDialog):
         super(OutputDialog, self).__init__()
         self.setWindowTitle('AutoCanary')
         self.setWindowIcon(QtGui.QIcon(common.get_image_path('icon.png')))
+        self.setWindowFlags(Qt.WindowCloseButtonHint)
         self.setModal(True)
 
         # signed message
@@ -24,12 +26,9 @@ class OutputDialog(QtGui.QDialog):
         copy_to_clipboard_button.clicked.connect(self.copy_to_clipboard_clicked)
         send_email_button = QtGui.QPushButton('Send Email')
         send_email_button.clicked.connect(self.send_email_clicked)
-        close_button = QtGui.QPushButton('Close')
-        close_button.clicked.connect(self.close_clicked)
         buttons_layout.addWidget(save_to_file_button)
         buttons_layout.addWidget(copy_to_clipboard_button)
         buttons_layout.addWidget(send_email_button)
-        buttons_layout.addWidget(close_button)
 
         # layout
         layout = QtGui.QVBoxLayout()
@@ -50,7 +49,4 @@ class OutputDialog(QtGui.QDialog):
 
     def send_email_clicked(self):
         pass
-
-    def close_clicked(self):
-        self.accept()
 
