@@ -62,7 +62,7 @@ class OutputDialog(QtGui.QDialog):
             ctypes.windll.user32.EmptyClipboard()
             hcd = ctypes.windll.kernel32.GlobalAlloc(GMEM_DDESHARE, len(bytes(self.signed_message))+1)
             pch_data = ctypes.windll.kernel32.GlobalLock(hcd)
-            ctypes.cdll.msvcrt.strcpy(ctypes.c_char_p(pch_data), bytes(url))
+            ctypes.cdll.msvcrt.strcpy(ctypes.c_char_p(pch_data), bytes(self.signed_message))
             ctypes.windll.kernel32.GlobalUnlock(hcd)
             ctypes.windll.user32.SetClipboardData(1, hcd)
             ctypes.windll.user32.CloseClipboard()
