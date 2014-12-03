@@ -1,39 +1,55 @@
 # AutoCanary
 
-A project by Morgan Marquis-Boire & Micah Lee
+A project by Micah Lee & Morgan Marquis-Boire
 
-(Implemented by Micah Lee)
+## Overview
 
-## Overview:
+A warrant canary is a colloquial term for a regularly published statement that a service provider has **not** received legal process that it would be prohibited from saying it had received. Once a service provider does receive legal process, the speech prohibition goes into place, and the canary statement is removed. For more information, see [EFF's Warrant Canary FAQ](https://www.eff.org/deeplinks/2014/04/warrant-canary-faq).
 
-A 'Warrant Canary' is a colloquial term for a regularly published statement that a service provider has not received legal process (like a national security letter) that it would be prohibited from disclosing to the public. Once a service provider does receive legal process, the speech prohibition goes into place, and the canary statement is removed.
+AutoCanary is a desktop program for Windows, Mac, and Linux that makes the process of generating machine-readable, digitally signed warrant canary statements simpler.
 
-For more information on warrant canaries see [EFF's Warrant Canary FAQ](https://www.eff.org/deeplinks/2014/04/warrant-canary-faq).
+See [these instructions](/BUILD.md) to turn the source code into a binary you can run. Binaries aren't provided yet.
 
-## ANATOMY OF AUTO-CANARY
+## How it works
 
-(1) Warrant Canary Text
-(2) Editing, Signing, and dating mechanism
-(3) Scheduling of re-attesting the Warrant Canary
-(4) Push mechanism for publishing the canary
+![AutoCanary](/screenshot.png)
 
-At this time, parts 1 & 2 are done. We anticipate that (3) will use in built operating system scheduling mechanisms. While (4) could take the form of various CMS plugins, it is probably going to be custom for every organization and as such, currently we will offer mailing this to the webadmin or output to stdout.
+Before you begin:
 
-AutoCanary supposes that the warrant canary will take the form of a web page. The web page will be dated and a new digitally signed copy uploaded at a regular interval. An automated scheduler runs, and at the appointed time each week, it prompts the required person (general counsel for instance) to enter in their PGP passphrase for the purposes of digitally signing the Warrant Canary. It then updates the time stamp on the document and uploads it to the webserver. The canary would stipulate that it is valid only for the interval between signing requests.
+* Choose one person in your organization (probably your general counsel) to be responsible for signing warrant canary statements. This person must have a PGP key.
+* Choose how often you wish to issue canary statements (available options are every 1 week, 2 weeks, 1 month, 3 months, 6 months, and 1 year).
+* Set a recurring event with a reminder in your calendar to sign your canary statement. **This is important:** failing to publish your canary statement on time could result in automated alarms ringing, and your users believing you've received a gag order when you have not.
+* Create a page on your website to publish your warrant canary message, [something like this](https://help.riseup.net/en/canary).
 
-This is meant to provide attestation. The digital signing affirms that the statement is true and verifies the identity of the posting person. The frequency of signing ensures that the entity regularly attests to the truth of the canary. In the event that that a warrant is served, the person would simply stop signing given that they would no longer be able to truthfully digitally sign thecanary page.
+When you run AutoCanary, you see a window with these fields:
 
-## BACKGROUND:
+* Date: This defaults to today's date. You probably won't have to change this, unless you want your warrant canary to be dated differently.
+* Expires after: This is how much time after the chosen date this warrant canary is valid for. If the canary expires and you haven't posted a new canary yet, then the alarm will sound.
+* Status: This should almost always be set to "All good". The other available options, "It's complicated" and "It's bad" are there if you need them, and are legally allowed to use them. If you do receive a gag order, you shouldn't change the status, you should simply let your canary expire.
+* Message: This starts out with a warrant canary message template. You should customize it to fit your organization, and end with the name of the person who will be signing.
+* PGP Key: Select your PGP key.
 
-The legal theory behind warrant canaries is based on the concept of compelled speech. The First Amendment protects against compelled speech in most circumstances. For example,a court held that the New Hampshire state government could not require its citizens to have "Live Free or Die" on their license plates. While the government may be able to compel silence about legal processes through a gag order, it’s much more difficult to argue that it can compel an ISP to lie by falsely stating that it has not received legal process when in fact it has.
+When you click `Save and Sign` all of these settings will be saved, so the next time you run AutoCanary you won't have to change anything. If you'd wish to sign a warrant canary that's different just this one time and not save your changes, you can click `One-Time Sign` instead.
+
+After clicking a sign button, you may be prompted to enter your PGP passphrase. You'll then see you final digitally-signed warrant canary message. If it looks good to you, post it to your website.
+
+If the person who digitally signs the canary messages knows how to update the website themselves, they can click `Copy to Clipboard`, edit the warrant canary page, and paste it. Otherwise they can click `Save to File`, and then email that file to the person in charge of updating the warrant canary page on the website. *Make sure they update it promptly to prevent the canary from expiring.*
+
+## Generating a PGP key
+
+TODO: Write this section, cross-platform.
+
+## Background
+
+The legal theory behind warrant canaries is based on the concept of compelled speech. The First Amendment protects against compelled speech in most circumstances. For example, a court held that the New Hampshire state government could not require its citizens to have "Live Free or Die" on their license plates. While the government may be able to compel silence about legal processes through a gag order, it's much more difficult to argue that it can compel an ISP to lie by falsely stating that it has not received legal process when in fact it has.
 
 The value of AutoCanary is that you shouldn't be forced to sign a document that you know to be untrue. Hence, if an NSL is served, the recipient would simply need to allow their canary to expire rather than sign a document that has become false.
 
-## DISCLAIMER:
+## Disclaimer
 
 This is the big murky legal question. Frankly, nobody really knows how this would go down in court.
 
-On one hand, some people argue that if the government imposes a non-disclosure order on you (as certain laws absolutely permit the government to do), you violate that order regardless of whether you disclose information affirmatively or by omission. And flouting a  non-disclosure order could be obstruction of justice or cause for a finding of contempt.
+On one hand, some people argue that if the government imposes a non-disclosure order on you (as certain laws absolutely permit the government to do), you violate that order regardless of whether you disclose information affirmatively or by omission. And flouting a non-disclosure order could be obstruction of justice or cause for a finding of contempt.
 
 On the other hand, some people say they don't think the government can force you to say something -- let alone something untrue -- because the First Amendment strongly disfavors compelled speech. Plus companies aren't supposed to blatantly deceive consumers, so this would be forcing them to violate consumer protection law.
 
