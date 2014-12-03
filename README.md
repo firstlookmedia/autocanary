@@ -35,6 +35,8 @@ After clicking a sign button, you may be prompted to enter your PGP passphrase. 
 
 If the person who digitally signs the canary messages knows how to update the website themselves, they can click `Copy to Clipboard`, edit the warrant canary page, and paste it. Otherwise they can click `Save to File`, and then email that file to the person in charge of updating the warrant canary page on the website. *Make sure they update it promptly to prevent the canary from expiring.*
 
+Every time your warrant canary calendar event notifies you, re-run AutoCanary, generate a new canary message, and update it on your website.
+
 ## Generating a PGP key
 
 TODO: Write this section, cross-platform.
