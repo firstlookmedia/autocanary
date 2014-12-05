@@ -4,7 +4,7 @@ A project by Micah Lee & Morgan Marquis-Boire
 
 ## Overview
 
-A warrant canary is a colloquial term for a regularly published statement that a service provider has **not** received legal process that it would be prohibited from saying it had received. Once a service provider does receive legal process, the speech prohibition goes into place, and the canary statement is removed. For more information, see [EFF's Warrant Canary FAQ](https://www.eff.org/deeplinks/2014/04/warrant-canary-faq).
+A warrant canary is a colloquial term for a published statement that a service provider has **not** received legal process hat it is prohibited from disclosing to the public, such as a national security letter. Once a service provider does receive legal process, that includes a non-disclosure order, the speech prohibition goes into place, and the canary statement is removed. For more information, see [EFF's Warrant Canary FAQ](https://www.eff.org/deeplinks/2014/04/warrant-canary-faq).
 
 AutoCanary is a desktop program for Windows, Mac, and Linux that makes the process of generating machine-readable, digitally signed warrant canary statements simpler.
 
@@ -55,7 +55,9 @@ On one hand, some people argue that if the government imposes a non-disclosure o
 
 On the other hand, some people say they don't think the government can force you to say something -- let alone something untrue -- because the First Amendment strongly disfavors compelled speech. Plus companies aren't supposed to blatantly deceive consumers, so this would be forcing them to violate consumer protection law.
 
-Basically, use AutoCanary at you own risk. All care and no responsibility.
+There is no public record of a warrant canary ever being tested in court. You should consult a lawyer to discuss the pros and cons before you decide whether publishing a Warrant Canary is a good course for your service provider. For more information about the legal issues surrounding Warrant Canaries, see: https://www.eff.org/deeplinks/2014/04/warrant-canary-faq
+
+Basically, use AutoCanary at your own risk. All care and no responsibility.
 
 <3
 Morgan Marquis-Boire & Micah Lee
