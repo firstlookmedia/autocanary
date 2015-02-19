@@ -25,7 +25,7 @@ When you run AutoCanary, you see a window with these fields:
 
 * Date: This defaults to today's date. You probably won't have to change this, unless you want your warrant canary to be dated differently.
 * Expires after: This is how much time after the chosen date this warrant canary is valid for. If the canary expires and you haven't posted a new canary yet, then the alarm will sound.
-* Status: This should almost always be set to "All good". The other available options, "It's complicated" and "It's bad" are there if you need them, and are legally allowed to use them. If you do receive a gag order, you shouldn't change the status, you should simply let your canary expire.
+* Status: This should almost always be set to "All good". The other available option, "It's complicated", is there if you need it and are legally allowed to use it. If you do receive a gag order, contact a lawyer to decide how to proceed.
 * Message: This starts out with a warrant canary message template. You should customize it to fit your organization, and end with the name of the person who will be signing.
 * PGP Key: Select your PGP key.
 

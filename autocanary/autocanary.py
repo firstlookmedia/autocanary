@@ -95,7 +95,7 @@ class AutoCanaryGui(QtGui.QWidget):
         self.status_layout = QtGui.QHBoxLayout()
         self.status_label = QtGui.QLabel('Status')
         self.status = QtGui.QComboBox()
-        status_options = ["All good", "It's complicated", "It's bad"]
+        status_options = ["All good", "It's complicated"]
         for option in status_options:
             self.status.addItem(option)
         option = self.settings.get_status()
