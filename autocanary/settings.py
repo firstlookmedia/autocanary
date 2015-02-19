@@ -54,7 +54,11 @@ class Settings(object):
                 'year': str(datetime.date.today().year),
                 'year_period': 'Q12',
                 'status': None,
-                'text': """During this period, (name of organization) has not received any National Security Letters or FISA court orders, and we have not been subject to any gag order by a FISA court, or any other similar court of any government.
+                'text': """During this period, (name of organization) has received:
+
+Zero National Security Letters
+Zero Foreign Intelligence Surveillance Court orders
+Zero gag orders that prevent us from from stating that we have received legal process seeking our customers' information
 
 (Name of general counsel)
 General Counsel
