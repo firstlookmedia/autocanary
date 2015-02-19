@@ -38,9 +38,10 @@ class AutoCanaryGui(QtGui.QWidget):
         year_options = [str(y-1), str(y), str(y+1)]
         for option in year_options:
             self.year.addItem(option)
-        year = self.settings.get_year()
+        option = self.settings.get_year()
         if option in year_options:
             self.year.setCurrentIndex(year_options.index(option))
+            print self.year.currentIndex()
         self.year_layout.addWidget(self.year_label)
         self.year_layout.addWidget(self.year)
         self.year.activated.connect(self.update_date)
@@ -66,6 +67,20 @@ class AutoCanaryGui(QtGui.QWidget):
         self.semiannually_layout.addWidget(self.semiannually_label)
         self.semiannually_layout.addWidget(self.semiannually_q12)
         self.semiannually_layout.addWidget(self.semiannually_q34)
+
+        year_period = self.settings.get_year_period()
+        if year_period == 'Q1':
+            self.quarterly_q1.setChecked(True)
+        elif year_period == 'Q2':
+            self.quarterly_q2.setChecked(True)
+        elif year_period == 'Q3':
+            self.quarterly_q3.setChecked(True)
+        elif year_period == 'Q4':
+            self.quarterly_q4.setChecked(True)
+        elif year_period == 'Q12':
+            self.semiannually_q12.setChecked(True)
+        elif year_period == 'Q34':
+            self.semiannually_q34.setChecked(True)
 
         # date layout
         self.date_layout = QtGui.QVBoxLayout()
@@ -133,23 +148,37 @@ class AutoCanaryGui(QtGui.QWidget):
     def update_date(self):
         # show either quarterly radio buttons or semiannually radio buttons
         if self.frequency.currentText() == 'Quarterly':
+            # show quarterly
             self.quarterly_label.show()
             self.quarterly_q1.show()
             self.quarterly_q2.show()
             self.quarterly_q3.show()
             self.quarterly_q4.show()
+
+            # hide semiannually
             self.semiannually_label.hide()
             self.semiannually_q12.hide()
             self.semiannually_q34.hide()
+
+            # make sure a quarterly radio button is checked
+            if not self.quarterly_q1.isChecked() and not self.quarterly_q2.isChecked() and not self.quarterly_q3.isChecked() and not self.quarterly_q4.isChecked():
+                self.quarterly_q1.setChecked(True)
         else:
+            # show semiannually
+            self.semiannually_label.show()
+            self.semiannually_q12.show()
+            self.semiannually_q34.show()
+
+            # hide quarterly
             self.quarterly_label.hide()
             self.quarterly_q1.hide()
             self.quarterly_q2.hide()
             self.quarterly_q3.hide()
             self.quarterly_q4.hide()
-            self.semiannually_label.show()
-            self.semiannually_q12.show()
-            self.semiannually_q34.show()
+
+            # make sure a semiannually radio button is checked
+            if not self.semiannually_q12.isChecked() and not self.semiannually_q34.isChecked():
+                self.semiannually_q12.setChecked(True)
 
         # update freqency text
         year = self.year.currentText()
@@ -160,6 +189,20 @@ class AutoCanaryGui(QtGui.QWidget):
         self.semiannually_q12.setText('Q1 and Q2 {}'.format(year))
         self.semiannually_q34.setText('Q3 and Q4 {}'.format(year))
 
+    def get_year_period(self):
+        if self.quarterly_q1.isChecked():
+            year_period = 'Q1'
+        if self.quarterly_q2.isChecked():
+            year_period = 'Q2'
+        if self.quarterly_q3.isChecked():
+            year_period = 'Q3'
+        if self.quarterly_q4.isChecked():
+            year_period = 'Q4'
+        if self.semiannually_q12.isChecked():
+            year_period = 'Q12'
+        if self.semiannually_q34.isChecked():
+            year_period = 'Q34'
+        return year_period
 
     def sign_save_clicked(self):
         self.save()
@@ -169,11 +212,15 @@ class AutoCanaryGui(QtGui.QWidget):
         self.sign()
 
     def save(self):
+        frequency = self.frequency.currentText()
+        year = self.year.currentText()
+        year_period = self.get_year_period()
         status = str(self.status.currentText())
         text = self.textbox.toPlainText()
 
-        self.settings.set_date(date)
-        self.settings.set_expires(expires)
+        self.settings.set_frequency(frequency)
+        self.settings.set_year(year)
+        self.settings.set_year_period(year_period)
         self.settings.set_status(status)
         self.settings.set_text(text)
 
@@ -184,11 +231,26 @@ class AutoCanaryGui(QtGui.QWidget):
         self.settings.save()
 
     def sign(self):
+        frequency = self.frequency.currentText()
+        year = self.year.currentText()
+        year_period = self.get_year_period()
         status = str(self.status.currentText())
         text = self.textbox.toPlainText()
 
         # add headers
-        message = 'Status: {2}\n\n{3}'.format(status, text)
+        if year_period == 'Q1':
+            period_date = 'January 1 to March 31'
+        if year_period == 'Q2':
+            period_date = 'April 1 to June 30'
+        if year_period == 'Q3':
+            period_date = 'July 1 to September 30'
+        if year_period == 'Q4':
+            period_date = 'October 1 to December 31'
+        if year_period == 'Q12':
+            period_date = 'January 1 to June 30'
+        if year_period == 'Q34':
+            period_date = 'July 1 to December 31'
+        message = 'Status: {}\nPeriod: {}, {}\n\n{}'.format(status, period_date, year, text)
 
         # sign the file
         key_i = self.key_selection.currentIndex()
