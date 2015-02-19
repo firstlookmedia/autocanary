@@ -1,4 +1,4 @@
-import os, pickle, platform
+import os, pickle, platform, datetime
 
 class Settings(object):
 
@@ -24,10 +24,10 @@ class Settings(object):
     def set_year(self, year):
         self.settings['year'] = year
 
-    def get_year_part(self):
-        return self.settings['year_part']
-    def set_year_part(self, year_part):
-        self.settings['year_part'] = year_part
+    def get_year_period(self):
+        return self.settings['year_period']
+    def set_year_period(self, year_period):
+        self.settings['year_period'] = year_period
 
     def get_status(self):
         return self.settings['status']
@@ -50,9 +50,9 @@ class Settings(object):
         else:
             # default settings
             self.settings = {
-                'frequency': None,
-                'year': None,
-                'year_part': None,
+                'frequency': 'Semiannually',
+                'year': str(datetime.date.today().year),
+                'year_period': 'Q12',
                 'status': None,
                 'text': """As of the date posted above, (name of organization) has not received any National Security Letters or FISA court orders, and we have not been subject to any gag order by a FISA court, or any other similar court of any government. (Name of organization) has never placed any backdoors in our hardware or software and has not received any requests to do so. (Name of organization) has never disclosed any user communications to any third party.
 
