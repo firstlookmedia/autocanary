@@ -7,22 +7,27 @@ class Settings(object):
         if system == 'Windows':
             appdata = os.environ['APPDATA']
             self.settings_path = '{0}\\autocanary_settings'.format(appdata)
-            
+
         else:
             home = os.path.expanduser("~")
             self.settings_path = '{0}/{1}'.format(home, '.autocanary')
-        
+
         self.load()
 
-    def get_date(self):
-        return self.settings['date']
-    def set_date(self, date):
-        self.settings['date'] = date
+    def get_frequency(self):
+        return self.settings['frequency']
+    def set_frequency(self, frequency):
+        self.settings['frequency'] = frequency
 
-    def get_expires(self):
-        return self.settings['expires']
-    def set_expires(self, date):
-        self.settings['expires'] = date
+    def get_year(self):
+        return self.settings['year']
+    def set_year(self, year):
+        self.settings['year'] = year
+
+    def get_year_part(self):
+        return self.settings['year_part']
+    def set_year_part(self, year_part):
+        self.settings['year_part'] = year_part
 
     def get_status(self):
         return self.settings['status']
@@ -45,8 +50,9 @@ class Settings(object):
         else:
             # default settings
             self.settings = {
-                'date': None,
-                'expires': None,
+                'frequency': None,
+                'year': None,
+                'year_part': None,
                 'status': None,
                 'text': """As of the date posted above, (name of organization) has not received any National Security Letters or FISA court orders, and we have not been subject to any gag order by a FISA court, or any other similar court of any government. (Name of organization) has never placed any backdoors in our hardware or software and has not received any requests to do so. (Name of organization) has never disclosed any user communications to any third party.
 

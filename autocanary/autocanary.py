@@ -15,26 +15,66 @@ class AutoCanaryGui(QtGui.QWidget):
         self.setWindowTitle('AutoCanary')
         self.setWindowIcon(QtGui.QIcon(common.get_image_path('icon.png')))
 
-        # current date
-        self.date_layout = QtGui.QHBoxLayout()
-        self.date_label = QtGui.QLabel('Date')
-        self.date = QtGui.QCalendarWidget()
-        self.date.setVerticalHeaderFormat(QtGui.QCalendarWidget.NoVerticalHeader)
-        self.date_layout.addWidget(self.date_label)
-        self.date_layout.addWidget(self.date)
+        # frequency, year
+        self.date_col1_layout = QtGui.QVBoxLayout()
 
-        # expires
-        self.expires_layout = QtGui.QHBoxLayout()
-        self.expires_label = QtGui.QLabel('Expires after')
-        self.expires = QtGui.QComboBox()
-        expires_options = ['1 week', '2 weeks', '1 month', '3 months', '6 months', '1 year']
-        for option in expires_options:
-            self.expires.addItem(option)
-        option = self.settings.get_expires()
-        if option in expires_options:
-            self.expires.setCurrentIndex(expires_options.index(option))
-        self.expires_layout.addWidget(self.expires_label)
-        self.expires_layout.addWidget(self.expires)
+        self.frequency_layout = QtGui.QHBoxLayout()
+        self.frequency_label = QtGui.QLabel('Frequency')
+        self.frequency = QtGui.QComboBox()
+        frequency_options = ["Quarterly", "Semiannually"]
+        for option in frequency_options:
+            self.frequency.addItem(option)
+        option = self.settings.get_frequency()
+        if option in frequency_options:
+            self.frequency.setCurrentIndex(frequency_options.index(option))
+        self.frequency_layout.addWidget(self.frequency_label)
+        self.frequency_layout.addWidget(self.frequency)
+        self.frequency.activated.connect(self.update_date)
+
+        self.year_layout = QtGui.QHBoxLayout()
+        self.year_label = QtGui.QLabel('Year')
+        self.year = QtGui.QComboBox()
+        y = datetime.date.today().year
+        year_options = [str(y-1), str(y), str(y+1)]
+        for option in year_options:
+            self.year.addItem(option)
+        year = self.settings.get_year()
+        if option in year_options:
+            self.year.setCurrentIndex(year_options.index(option))
+        self.year_layout.addWidget(self.year_label)
+        self.year_layout.addWidget(self.year)
+        self.year.activated.connect(self.update_date)
+
+        # quarterly radio buttons
+        self.quarterly_layout = QtGui.QHBoxLayout()
+        self.quarterly_label = QtGui.QLabel('Quarter')
+        self.quarterly_q1 = QtGui.QRadioButton("")
+        self.quarterly_q2 = QtGui.QRadioButton("")
+        self.quarterly_q3 = QtGui.QRadioButton("")
+        self.quarterly_q4 = QtGui.QRadioButton("")
+        self.quarterly_layout.addWidget(self.quarterly_label)
+        self.quarterly_layout.addWidget(self.quarterly_q1)
+        self.quarterly_layout.addWidget(self.quarterly_q2)
+        self.quarterly_layout.addWidget(self.quarterly_q3)
+        self.quarterly_layout.addWidget(self.quarterly_q4)
+
+        # semiannual radio buttons
+        self.semiannually_layout = QtGui.QHBoxLayout()
+        self.semiannually_label = QtGui.QLabel('Semester')
+        self.semiannually_q12 = QtGui.QRadioButton("")
+        self.semiannually_q34 = QtGui.QRadioButton("")
+        self.semiannually_layout.addWidget(self.semiannually_label)
+        self.semiannually_layout.addWidget(self.semiannually_q12)
+        self.semiannually_layout.addWidget(self.semiannually_q34)
+
+        # date layout
+        self.date_layout = QtGui.QVBoxLayout()
+        self.date_layout.addLayout(self.frequency_layout)
+        self.date_layout.addLayout(self.year_layout)
+        self.date_layout.addLayout(self.quarterly_layout)
+        self.date_layout.addLayout(self.semiannually_layout)
+
+        self.update_date()
 
         # status
         self.status_layout = QtGui.QHBoxLayout()
@@ -83,13 +123,43 @@ class AutoCanaryGui(QtGui.QWidget):
         # layout
         self.layout = QtGui.QVBoxLayout()
         self.layout.addLayout(self.date_layout)
-        self.layout.addLayout(self.expires_layout)
         self.layout.addLayout(self.status_layout)
         self.layout.addWidget(self.textbox)
         self.layout.addWidget(self.key_selection)
         self.layout.addLayout(self.buttons_layout)
         self.setLayout(self.layout)
         self.show()
+
+    def update_date(self):
+        # show either quarterly radio buttons or semiannually radio buttons
+        if self.frequency.currentText() == 'Quarterly':
+            self.quarterly_label.show()
+            self.quarterly_q1.show()
+            self.quarterly_q2.show()
+            self.quarterly_q3.show()
+            self.quarterly_q4.show()
+            self.semiannually_label.hide()
+            self.semiannually_q12.hide()
+            self.semiannually_q34.hide()
+        else:
+            self.quarterly_label.hide()
+            self.quarterly_q1.hide()
+            self.quarterly_q2.hide()
+            self.quarterly_q3.hide()
+            self.quarterly_q4.hide()
+            self.semiannually_label.show()
+            self.semiannually_q12.show()
+            self.semiannually_q34.show()
+
+        # update freqency text
+        year = self.year.currentText()
+        self.quarterly_q1.setText('Q1 {}'.format(year));
+        self.quarterly_q2.setText('Q2 {}'.format(year));
+        self.quarterly_q3.setText('Q3 {}'.format(year));
+        self.quarterly_q4.setText('Q4 {}'.format(year));
+        self.semiannually_q12.setText('Q1 and Q2 {}'.format(year))
+        self.semiannually_q34.setText('Q3 and Q4 {}'.format(year))
+
 
     def sign_save_clicked(self):
         self.save()
@@ -99,8 +169,6 @@ class AutoCanaryGui(QtGui.QWidget):
         self.sign()
 
     def save(self):
-        date = self.get_date_string()
-        expires = str(self.expires.currentText())
         status = str(self.status.currentText())
         text = self.textbox.toPlainText()
 
@@ -115,17 +183,12 @@ class AutoCanaryGui(QtGui.QWidget):
 
         self.settings.save()
 
-    def get_date_string(self):
-        return self.date.selectedDate().toString('MMMM d, yyyy')
-
     def sign(self):
-        date = self.get_date_string()
-        expires = str(self.expires.currentText())
         status = str(self.status.currentText())
         text = self.textbox.toPlainText()
 
         # add headers
-        message = 'Date: {0}\nExpires after: {1}\nStatus: {2}\n\n{3}'.format(date, expires, status, text)
+        message = 'Status: {2}\n\n{3}'.format(status, text)
 
         # sign the file
         key_i = self.key_selection.currentIndex()
