@@ -44,7 +44,7 @@ Now you should have `dist\autocanary-launcher.exe`.
 
 Install the dependencies:
 
-'''sh
+```sh
 sudo apt-get install -y build-essential fakeroot python-all python-stdeb python-qt4 gnupg2
 ```
 
