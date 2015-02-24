@@ -19,6 +19,14 @@ python setup.py py2app
 
 Now you should have `dist/AutoCanary.app`.
 
+To build a .dmg:
+
+```sh
+install/build_dmg.sh
+```
+
+Now you should have `dist/AutoCanary.dmg`.
+
 
 ## Windows
 
