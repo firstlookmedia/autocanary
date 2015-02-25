@@ -27,7 +27,7 @@ if system == 'Linux':
 elif system == 'Darwin':
     setup(
         name='AutoCanary',
-        app=['autocanary-launcher.py'],
+        app=['autocanary.py'],
         data_files=[],
         options={
             'py2app': {
@@ -44,7 +44,7 @@ elif system == 'Windows':
     import py2exe
     setup(
         name='AutoCanary',
-        windows=[{'script':'autocanary-launcher.py'}],
+        windows=[{'script':'autocanary.py'}],
         options={
             'py2exe': {
                 'includes': ['sip', 'PyQt4'],
