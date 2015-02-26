@@ -44,6 +44,7 @@ elif system == 'Windows':
     import py2exe
     setup(
         name='AutoCanary',
+        data_files=[('', ['share/icon.png'])],
         windows=[{'script':'autocanary.py'}],
         options={
             'py2exe': {

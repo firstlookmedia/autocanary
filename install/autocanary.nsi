@@ -63,6 +63,7 @@ Section "install"
     File "${BINPATH}\autocanary.exe"
     File "${BINPATH}\library.zip"
 	File "${BINPATH}\w9xpopen.exe"
+    File "${BINPATH}\icon.png"
 
     # uninstaller
     !ifndef INNER
@@ -109,6 +110,7 @@ FunctionEnd
         Delete "$INSTDIR\library.zip"
 		Delete "$INSTDIR\w9xpopen.exe"
         Delete "$INSTDIR\icon.ico"
+        Delete "$INSTDIR\icon.png"
         Delete "$INSTDIR\uninstall.exe"
         rmDir "$INSTDIR"
 
