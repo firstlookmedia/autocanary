@@ -21,7 +21,7 @@ class AutoCanaryGui(QtGui.QWidget):
         self.frequency_layout = QtGui.QHBoxLayout()
         self.frequency_label = QtGui.QLabel('Frequency')
         self.frequency = QtGui.QComboBox()
-        frequency_options = ["Quarterly", "Semiannually"]
+        frequency_options = ["Weekly", "Monthly", "Quarterly", "Semiannually"]
         for option in frequency_options:
             self.frequency.addItem(option)
         option = self.settings.get_frequency()
@@ -45,6 +45,23 @@ class AutoCanaryGui(QtGui.QWidget):
         self.year_layout.addWidget(self.year_label)
         self.year_layout.addWidget(self.year)
         self.year.activated.connect(self.update_date)
+
+        # weekly dropdown
+        self.weekly_layout = QtGui.QHBoxLayout()
+        self.weekly_label = QtGui.QLabel('Week')
+        self.weekly_dropdown = QtGui.QComboBox()
+        self.weekly_layout.addWidget(self.weekly_label)
+        self.weekly_layout.addWidget(self.weekly_dropdown)
+
+        # monthly dropdown
+        self.monthly_layout = QtGui.QHBoxLayout()
+        self.monthly_label = QtGui.QLabel('Month')
+        self.monthly_dropdown = QtGui.QComboBox()
+        monthly_options = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+        for option in monthly_options:
+            self.monthly_dropdown.addItem(option)
+        self.monthly_layout.addWidget(self.monthly_label)
+        self.monthly_layout.addWidget(self.monthly_dropdown)
 
         # quarterly radio buttons
         self.quarterly_layout = QtGui.QHBoxLayout()
@@ -86,6 +103,8 @@ class AutoCanaryGui(QtGui.QWidget):
         self.date_layout = QtGui.QVBoxLayout()
         self.date_layout.addLayout(self.frequency_layout)
         self.date_layout.addLayout(self.year_layout)
+        self.date_layout.addLayout(self.weekly_layout)
+        self.date_layout.addLayout(self.monthly_layout)
         self.date_layout.addLayout(self.quarterly_layout)
         self.date_layout.addLayout(self.semiannually_layout)
 
@@ -146,42 +165,90 @@ class AutoCanaryGui(QtGui.QWidget):
         self.show()
 
     def update_date(self):
-        # show either quarterly radio buttons or semiannually radio buttons
-        if self.frequency.currentText() == 'Quarterly':
-            # show quarterly
+        frequency = self.frequency.currentText()
+        year = self.year.currentText()
+
+        if frequency == 'Weekly':
+            self.weekly_label.show()
+            self.weekly_dropdown.show()
+
+            # regenerate the weekly dropdown options based on the current year
+            self.weekly_dropdown.clear()
+
+            one_week = datetime.timedelta(7)
+            cur_date = datetime.datetime(int(year), 1, 1)
+
+            def get_monday_of_week(d):
+                days_past = d.isoweekday() - 1
+                d = d - datetime.timedelta(days_past)
+                return d
+
+            def get_sunday_of_week(d):
+                days_future = 7 - d.isoweekday()
+                d = d + datetime.timedelta(days_future)
+                return d
+
+            while cur_date.year == int(year):
+                date_str = ''
+
+                # figure out the start and end dates of the week
+                monday_date = get_monday_of_week(cur_date)
+                sunday_date = get_sunday_of_week(cur_date)
+
+                if sunday_date.year != int(year):
+                    break
+
+                date_str += '{0} to {1}, {2}'.format(
+                    monday_date.strftime('%b %d'),
+                    sunday_date.strftime('%b %d'),
+                    year
+                )
+                self.weekly_dropdown.addItem(date_str)
+
+                cur_date += one_week
+
+        else:
+            self.weekly_label.hide()
+            self.weekly_dropdown.hide()
+
+        if frequency == 'Monthly':
+            self.monthly_label.show()
+            self.monthly_dropdown.show()
+        else:
+            self.monthly_label.hide()
+            self.monthly_dropdown.hide()
+
+        if frequency == 'Quarterly':
             self.quarterly_label.show()
             self.quarterly_q1.show()
             self.quarterly_q2.show()
             self.quarterly_q3.show()
             self.quarterly_q4.show()
 
-            # hide semiannually
-            self.semiannually_label.hide()
-            self.semiannually_q12.hide()
-            self.semiannually_q34.hide()
-
             # make sure a quarterly radio button is checked
             if not self.quarterly_q1.isChecked() and not self.quarterly_q2.isChecked() and not self.quarterly_q3.isChecked() and not self.quarterly_q4.isChecked():
                 self.quarterly_q1.setChecked(True)
         else:
-            # show semiannually
-            self.semiannually_label.show()
-            self.semiannually_q12.show()
-            self.semiannually_q34.show()
-
-            # hide quarterly
             self.quarterly_label.hide()
             self.quarterly_q1.hide()
             self.quarterly_q2.hide()
             self.quarterly_q3.hide()
             self.quarterly_q4.hide()
 
+        if frequency == 'Semiannually':
+            self.semiannually_label.show()
+            self.semiannually_q12.show()
+            self.semiannually_q34.show()
+
             # make sure a semiannually radio button is checked
             if not self.semiannually_q12.isChecked() and not self.semiannually_q34.isChecked():
                 self.semiannually_q12.setChecked(True)
+        else:
+            self.semiannually_label.hide()
+            self.semiannually_q12.hide()
+            self.semiannually_q34.hide()
 
         # update freqency text
-        year = self.year.currentText()
         self.quarterly_q1.setText('Q1 {}'.format(year));
         self.quarterly_q2.setText('Q2 {}'.format(year));
         self.quarterly_q3.setText('Q3 {}'.format(year));
