@@ -19,13 +19,13 @@ python setup.py py2app
 
 Now you should have `dist/AutoCanary.app`.
 
-To build a .dmg:
+To build a codesigned and ready to distribute .pkg (note, you must be a Mac Developer to do this):
 
 ```sh
-install/build_dmg.sh
+install/build_osx.sh
 ```
 
-Now you should have `dist/AutoCanary.dmg`.
+Now you should have `dist/AutoCanary.pkg`.
 
 
 ## Windows
