@@ -24,11 +24,6 @@ class Settings(object):
     def set_year(self, year):
         self.settings['year'] = year
 
-    def get_year_period(self):
-        return self.settings['year_period']
-    def set_year_period(self, year_period):
-        self.settings['year_period'] = year_period
-
     def get_status(self):
         return self.settings['status']
     def set_status(self, status):
@@ -52,7 +47,6 @@ class Settings(object):
             self.settings = {
                 'frequency': 'Semiannually',
                 'year': str(datetime.date.today().year),
-                'year_period': 'Q12',
                 'status': None,
                 'text': """During this period, (name of organization) has received:
 

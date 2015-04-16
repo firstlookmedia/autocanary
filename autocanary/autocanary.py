@@ -41,7 +41,6 @@ class AutoCanaryGui(QtGui.QWidget):
         option = self.settings.get_year()
         if option in year_options:
             self.year.setCurrentIndex(year_options.index(option))
-            print self.year.currentIndex()
         self.year_layout.addWidget(self.year_label)
         self.year_layout.addWidget(self.year)
         self.year.activated.connect(self.update_date)
@@ -84,20 +83,6 @@ class AutoCanaryGui(QtGui.QWidget):
         self.semiannually_layout.addWidget(self.semiannually_label)
         self.semiannually_layout.addWidget(self.semiannually_q12)
         self.semiannually_layout.addWidget(self.semiannually_q34)
-
-        year_period = self.settings.get_year_period()
-        if year_period == 'Q1':
-            self.quarterly_q1.setChecked(True)
-        elif year_period == 'Q2':
-            self.quarterly_q2.setChecked(True)
-        elif year_period == 'Q3':
-            self.quarterly_q3.setChecked(True)
-        elif year_period == 'Q4':
-            self.quarterly_q4.setChecked(True)
-        elif year_period == 'Q12':
-            self.semiannually_q12.setChecked(True)
-        elif year_period == 'Q34':
-            self.semiannually_q34.setChecked(True)
 
         # date layout
         self.date_layout = QtGui.QVBoxLayout()
@@ -198,10 +183,9 @@ class AutoCanaryGui(QtGui.QWidget):
                 if sunday_date.year != int(year):
                     break
 
-                date_str += '{0} to {1}, {2}'.format(
+                date_str += '{0} to {1}'.format(
                     monday_date.strftime('%b %d'),
-                    sunday_date.strftime('%b %d'),
-                    year
+                    sunday_date.strftime('%b %d')
                 )
                 self.weekly_dropdown.addItem(date_str)
 
@@ -257,18 +241,30 @@ class AutoCanaryGui(QtGui.QWidget):
         self.semiannually_q34.setText('Q3 and Q4 {}'.format(year))
 
     def get_year_period(self):
-        if self.quarterly_q1.isChecked():
-            year_period = 'Q1'
-        if self.quarterly_q2.isChecked():
-            year_period = 'Q2'
-        if self.quarterly_q3.isChecked():
-            year_period = 'Q3'
-        if self.quarterly_q4.isChecked():
-            year_period = 'Q4'
-        if self.semiannually_q12.isChecked():
-            year_period = 'Q12'
-        if self.semiannually_q34.isChecked():
-            year_period = 'Q34'
+        frequency = self.frequency.currentText()
+
+        if frequency == 'Weekly':
+            year_period = self.weekly_dropdown.currentText()
+
+        elif frequency == 'Monthly':
+            year_period = self.monthly_dropdown.currentText()
+
+        elif frequency == 'Quarterly':
+            if self.quarterly_q1.isChecked():
+                year_period = 'Q1'
+            if self.quarterly_q2.isChecked():
+                year_period = 'Q2'
+            if self.quarterly_q3.isChecked():
+                year_period = 'Q3'
+            if self.quarterly_q4.isChecked():
+                year_period = 'Q4'
+
+        elif frequency == 'Semiannually':
+            if self.semiannually_q12.isChecked():
+                year_period = 'Q12'
+            if self.semiannually_q34.isChecked():
+                year_period = 'Q34'
+
         return year_period
 
     def sign_save_clicked(self):
@@ -287,7 +283,6 @@ class AutoCanaryGui(QtGui.QWidget):
 
         self.settings.set_frequency(frequency)
         self.settings.set_year(year)
-        self.settings.set_year_period(year_period)
         self.settings.set_status(status)
         self.settings.set_text(text)
 
@@ -305,18 +300,21 @@ class AutoCanaryGui(QtGui.QWidget):
         text = self.textbox.toPlainText()
 
         # add headers
-        if year_period == 'Q1':
-            period_date = 'January 1 to March 31'
-        if year_period == 'Q2':
-            period_date = 'April 1 to June 30'
-        if year_period == 'Q3':
-            period_date = 'July 1 to September 30'
-        if year_period == 'Q4':
-            period_date = 'October 1 to December 31'
-        if year_period == 'Q12':
-            period_date = 'January 1 to June 30'
-        if year_period == 'Q34':
-            period_date = 'July 1 to December 31'
+        period_date = year_period
+        if frequency == 'Quarterly':
+            if year_period == 'Q1':
+                period_date = 'January 1 to March 31'
+            elif year_period == 'Q2':
+                period_date = 'April 1 to June 30'
+            elif year_period == 'Q3':
+                period_date = 'July 1 to September 30'
+            elif year_period == 'Q4':
+                period_date = 'October 1 to December 31'
+        elif frequency == 'Semiannually':
+            if year_period == 'Q12':
+                period_date = 'January 1 to June 30'
+            elif year_period == 'Q34':
+                period_date = 'July 1 to December 31'
         message = 'Status: {}\nPeriod: {}, {}\n\n{}'.format(status, period_date, year, text)
 
         # sign the file
