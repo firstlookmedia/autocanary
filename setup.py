@@ -27,6 +27,7 @@ if system == 'Linux':
 elif system == 'Darwin':
     setup(
         name='AutoCanary',
+        version=version,
         app=['autocanary.py'],
         data_files=[],
         options={
@@ -44,6 +45,7 @@ elif system == 'Windows':
     import py2exe
     setup(
         name='AutoCanary',
+        version=version,
         data_files=[('', ['share/icon.png'])],
         windows=[{'script':'autocanary.py'}],
         options={
