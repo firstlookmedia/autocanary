@@ -1,6 +1,6 @@
 """
 AutoCanary | https://firstlook.org/code/autocanary
-Copyright © 2015 First Look Media
+Copyright (c) 2015 First Look Media
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the
