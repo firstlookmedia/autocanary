@@ -77,7 +77,7 @@ class GnuPG(object):
         open(filename, 'w').write(text)
 
         # sign the file
-        p = subprocess.Popen(self.gpg_command + ['--use-agent', '--default-key', signing_fp, '--clearsign', '--no-emit-version', '--no-comments', filename], creationflags=self.creationflags)
+        p = subprocess.Popen(self.gpg_command + ['--use-agent', '--default-key', signing_fp, '--no-emit-version', '--no-comments', '--clearsign', filename], creationflags=self.creationflags)
         returncode = p.wait()
         if returncode != 0:
             shutil.rmtree(tempdir)
