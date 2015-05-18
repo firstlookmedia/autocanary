@@ -48,7 +48,7 @@ On one hand, some people argue that if the government imposes a non-disclosure o
 
 On the other hand, some people say they don't think the government can force you to say something -- let alone something untrue -- because the First Amendment strongly disfavors compelled speech. Additionally, companies aren't supposed to blatantly deceive consumers, so anything to that effect would be forcing them to violate consumer protection law.
 
-There is no public record of a warrant canary ever being tested in court. You should consult a lawyer to discuss the benefits and hazards before you decide whether publishing a Warrant Canary is a good course for your service. For more information about the legal issues surrounding Warrant Canaries, see: https://www.eff.org/deeplinks/2014/04/warrant-canary-faq
+There is no public record of a warrant canary ever being tested in court. You should consult a lawyer to discuss the benefits and hazards before you decide whether publishing a warrant canary is a good course for your service. For more information about the legal issues surrounding warrant canaries, see: https://www.eff.org/deeplinks/2014/04/warrant-canary-faq
 
 Basically, use AutoCanary at your own risk. All care and no responsibility.
 
