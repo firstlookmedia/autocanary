@@ -1,14 +1,10 @@
 # AutoCanary
 
-A project by Micah Lee & Morgan Marquis-Boire
-
-## Overview
-
-A warrant canary is a colloquial term for a published statement that a service provider has **not** received legal process that it is prohibited from disclosing to the public, such as a national security letter. Once a service provider does receive legal process that includes a non-disclosure order, the speech prohibition goes into place, and the canary statement is removed. For more information, see [EFF's Warrant Canary FAQ](https://www.eff.org/deeplinks/2014/04/warrant-canary-faq).
-
 AutoCanary is a simple, open source, desktop program for Windows, Mac, and Linux that makes the process of generating machine-readable, digitally signed warrant canary statements simpler.
 
-See [these instructions](/BUILD.md) to turn the source code into a binary you can run. Binaries aren't provided yet.
+A warrant canary is the colloquial term for a published statement that a service provider has **not** received legal process that it is prohibited from disclosing to the public, such as a national security letter. Once a service provider receives a legal request that contains a gag order, the canary statement is removed. For more information, see [EFF's Warrant Canary FAQ](https://www.eff.org/deeplinks/2014/04/warrant-canary-faq).
+
+See the [AutoCanary website](https://firstlook.org/code/autocanary) to learn how to install it. See [these instructions](/BUILD.md) to turn the source code into a binary you can run.
 
 ## How it works
 
@@ -16,14 +12,14 @@ See [these instructions](/BUILD.md) to turn the source code into a binary you ca
 
 Before you begin:
 
-* Choose one person in your organization (probably your general counsel) to be responsible for signing warrant canary statements. This person must have a PGP key.
-* Choose how often you wish to issue canary statements (available options are every weekly, monthly, quarterly, and semi-annually).
+* Choose one person in your organization (probably your General Counsel) to be responsible for signing warrant canary statements. This person must have a PGP key.
+* Choose how often you wish to issue canary statements (available options include weekly, monthly, quarterly, and semi-annually).
 * Set a recurring event with a reminder in your calendar to sign your canary statement. **This is important:** failing to publish your canary statement on time could result in automated alarms ringing. If your canary stops tweeting, it may lead your users to believe you've received a gag order when you haven't.
 * Create a page on your website to publish your warrant canary message, [something like this](https://help.riseup.net/en/canary).
 
 When you run AutoCanary, you see a window with these fields:
 
-* Frequency: This defines the interval that the warrant canary will cover. The canary will attest to a period of time during which you have not received a gag order. This could be a specific week, month, and so on. 
+* Frequency: This defines the interval that the warrant canary will cover. The canary will attest to a period of time during which you have not received a gag order. This could be a specific week, month, and so on.
 * Year:  This defaults the current year. You probably won't have to change this, unless you want your warrant canary to be dated differently.
 * Week / Month / Quarter / Semester: This will allow you to set the exact dates based on the 'Frequency' interval that you chose.
 * Status: This should almost always be set to "All good". The other available option, "It's complicated", is there if you need it and are legally allowed to use it. If you do receive a gag order, contact a lawyer to decide how to proceed.
