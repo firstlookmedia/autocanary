@@ -40,7 +40,7 @@ ${EndIf}
     !echo "Creating normal installer"
     !system "$\"${NSISDIR}\makensis$\" /DINNER autocanary.nsi" = 0
     !system "$%TEMP%\tempinstaller.exe" = 2
-    !system "signtool.exe sign /v /d $\"Uninstall AutoCanary$\" /a /tr http://www.startssl.com/timestamp $%TEMP%\uninstall.exe" = 0
+    !system "signtool.exe sign /v /d $\"Uninstall AutoCanary$\" /a /tr http://timestamp.globalsign.com/scripts/timstamp.dll $%TEMP%\uninstall.exe" = 0
     
     # all done, now we can build the real installer
     OutFile "..\dist\AutoCanary_Setup.exe"
