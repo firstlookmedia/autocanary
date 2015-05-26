@@ -52,7 +52,15 @@ elif system == 'Darwin':
                 'argv_emulation': True,
                 'iconfile':'install/icon.icns',
                 'includes': ['sip', 'PyQt4', 'PyQt4.QtCore', 'PyQt4.QtGui'],
-                'excludes': ['PyQt4.QtDesigner', 'PyQt4.QtNetwork', 'PyQt4.QtOpenGL', 'PyQt4.QtScript', 'PyQt4.QtSql', 'PyQt4.QtTest', 'PyQt4.QtWebKit', 'PyQt4.QtXml', 'PyQt4.phonon']
+                'excludes': [
+                    'PyQt4.QtDesigner', 'PyQt4.QtNetwork',
+                    'PyQt4.QtOpenGL', 'PyQt4.QtScript',
+                    'PyQt4.QtSql', 'PyQt4.QtTest',
+                    'PyQt4.QtWebKit', 'PyQt4.QtXml',
+                    'PyQt4.phonon', 'PyQt4.QtDeclarative',
+                    'PyQt4.QtHelp', 'PyQt4.QtMultimedia',
+                    'PyQt4.QtScript', 'PyQt4.QtScriptTools',
+                    'PyQt4.QtSvg', 'PyQt4.QtXmlPatterns']
             }
         },
         setup_requires=['py2app'],
