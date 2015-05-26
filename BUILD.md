@@ -2,6 +2,8 @@
 
 ## Mac OS X
 
+Install the [latest python 2.x](https://www.python.org/downloads/) from python.org. If you use the built-in version of python that comes with OS X, your .app might not run on other people's computers.
+
 To install the right dependencies, you need homebrew and pip installed on your Mac. Follow instructions at http://brew.sh/ to install homebrew, and run `sudo easy_install pip` to install pip.
 
 The first time you're setting up your dev environment:
@@ -14,15 +16,15 @@ sudo pip install py2app
 To build the .app:
 
 ```sh
-python setup.py py2app
+install/build_osx.sh
 ```
 
 Now you should have `dist/AutoCanary.app`.
 
-To build a codesigned and ready to distribute .pkg (note, you must be a Mac Developer to do this):
+To build a codesigned and ready to distribute .pkg (note, you must be a Mac Developer to do this, and you'll need to edit `build_osx.sh` to use your own signing identity):
 
 ```sh
-install/build_osx.sh
+install/build_osx.sh --sign
 ```
 
 Now you should have `dist/AutoCanary.pkg`.
