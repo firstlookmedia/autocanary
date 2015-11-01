@@ -13,6 +13,12 @@ brew install qt4 pyqt
 sudo pip install py2app
 ```
 
+To run locally:
+
+```sh
+python autocanary.py
+```
+
 To build the .app:
 
 ```sh
@@ -73,6 +79,12 @@ Install the dependencies:
 
 ```sh
 sudo apt-get install -y build-essential fakeroot python-all python-stdeb python-qt4 gnupg2
+```
+
+To run locally:
+
+```sh
+python autocanary.py
 ```
 
 Build and install the .deb:
