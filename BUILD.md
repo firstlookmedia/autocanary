@@ -73,7 +73,7 @@ Open a command prompt, cd to the autocanary directory, and type: `install\build_
 
 A NSIS window will pop up, and once it's done you will have `dist\AutoCanary_Setup.exe`.
 
-## Linux
+## Linux (Debian-based)
 
 Install the dependencies:
 
@@ -92,4 +92,25 @@ Build and install the .deb:
 ```sh
 install/build_deb.sh
 sudo dpkg -i deb_dist/autocanary_*.deb
+```
+
+## Linux (RedHat-based)
+
+Install the dependencies:
+
+```sh
+sudo yum install rpm-build pyqt4 gnupg2
+```
+
+To run locally:
+
+```sh
+python autocanary.py
+```
+
+Build and install the .rpm:
+
+```sh
+install/build_rpm.sh
+sudo yum install -y dist/autocanary-*.rpm
 ```
