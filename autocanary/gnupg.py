@@ -51,6 +51,8 @@ class GnuPG(object):
 
                 uids = []
                 p = subprocess.Popen(self.gpg_command + ['--fingerprint', '--with-colons', '--list-keys', fp], stdout=subprocess.PIPE, creationflags=self.creationflags)
+                if p.wait() != 0:
+                  continue
                 (stdoutdata, stderrdata) = p.communicate()
                 gpg_output2 = stdoutdata.split('\n')
 
