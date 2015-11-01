@@ -17,6 +17,7 @@ develop-eggs
 .installed.cfg
 MANIFEST
 env
+autocanary-*.tar.gz
 
 # Installer logs
 pip-log.txt
