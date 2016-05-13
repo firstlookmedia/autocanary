@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-import subprocess, os, platform, tempfile, shutil
+import subprocess, os, platform, tempfile, shutil, codecs
 
 class GnuPG(object):
 
@@ -76,7 +76,9 @@ class GnuPG(object):
 
         # write message to file
         filename = '{0}/message'.format(tempdir)
-        open(filename, 'w').write(text)
+
+        # text is a character string: don't forget to encode before writing.
+        open(filename, 'w').write(text.encode('utf-8'))
 
         # sign the file
         p = subprocess.Popen(self.gpg_command + ['--use-agent', '--default-key', signing_fp, '--no-emit-version', '--no-comments', '--clearsign', filename], creationflags=self.creationflags)
@@ -87,7 +89,7 @@ class GnuPG(object):
 
         # read the signed message
         signed_filename = '{0}/message.asc'.format(tempdir)
-        signed_message = open(signed_filename, 'r').read()
+        signed_message = codecs.open(signed_filename, 'r', 'utf-8').read()
         shutil.rmtree(tempdir)
 
         return signed_message
