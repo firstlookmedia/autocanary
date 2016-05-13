@@ -18,16 +18,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import sys, datetime, platform
 from PyQt4 import QtCore, QtGui
 from gnupg import GnuPG
+from headlines import Headlines
 from settings import Settings
 from output_dialog import OutputDialog
 import common
 
 class AutoCanaryGui(QtGui.QWidget):
 
-    def __init__(self, app, gpg):
+    def __init__(self, app, gpg, headlines):
         super(AutoCanaryGui, self).__init__()
         self.app = app
         self.gpg = gpg
+        self.headlines = headlines
         self.settings = Settings()
         self.setWindowTitle('AutoCanary')
         self.setWindowIcon(QtGui.QIcon(common.get_image_path('icon.png')))
@@ -129,6 +131,9 @@ class AutoCanaryGui(QtGui.QWidget):
         self.textbox = QtGui.QTextEdit()
         self.textbox.setText(self.settings.get_text())
 
+        # headlines controls: [checkbox, button, button].
+        self.headlines_controls = self.get_headlines_controls()
+
         # key selection
         seckeys = gpg.seckeys_list()
         self.key_selection = QtGui.QComboBox()
@@ -156,11 +161,17 @@ class AutoCanaryGui(QtGui.QWidget):
         self.buttons_layout.addWidget(self.sign_save_button)
         self.buttons_layout.addWidget(self.sign_once)
 
+        # headlines controls.
+        self.headline_controls_layout = QtGui.QHBoxLayout()
+        for hl_control in self.headlines_controls:
+            self.headline_controls_layout.addWidget(hl_control)
+
         # layout
         self.layout = QtGui.QVBoxLayout()
         self.layout.addLayout(self.date_layout)
         self.layout.addLayout(self.status_layout)
         self.layout.addWidget(self.textbox)
+        self.layout.addLayout(self.headline_controls_layout)
         self.layout.addWidget(self.key_selection)
         self.layout.addLayout(self.buttons_layout)
         self.setLayout(self.layout)
@@ -314,7 +325,10 @@ class AutoCanaryGui(QtGui.QWidget):
         year = self.year.currentText()
         year_period = self.get_year_period()
         status = str(self.status.currentText())
-        text = self.textbox.toPlainText()
+        text = str(self.textbox.toPlainText())
+
+        if self.headlines.enabled and self.headlines.have_headlines:
+            text = '\n\n'.join([text, self.headlines.headlines_str, ''])
 
         # add headers
         period_date = year_period
@@ -346,12 +360,64 @@ class AutoCanaryGui(QtGui.QWidget):
         else:
             common.alert('Failed to sign message.')
 
+    def get_headlines_controls(self):
+        checkbox = QtGui.QCheckBox('Add Recent News Headlines')
+        button_fetch = QtGui.QPushButton('Fetch Headlines')
+        button_fetch.setDisabled(True)
+        button_preview = QtGui.QPushButton('Preview Headlines')
+        button_preview.setDisabled(True)
+        def fetch_headlines():
+            # synchronous.
+            self.headlines.fetch_headlines()
+            button_fetch.setDisabled(False)
+            self.setCursor(QtCore.Qt.ArrowCursor)
+            if self.headlines.have_headlines:
+                button_preview.setDisabled(False)
+        def cb_clicked():
+            if checkbox.isChecked():
+                button_fetch.setDisabled(False)
+                self.headlines.enabled = True
+                if self.headlines.have_headlines:
+                    button_preview.setDisabled(False)
+                else:
+                    button_preview.setDisabled(True)
+            else:
+                self.headlines.enabled = False
+                button_fetch.setDisabled(True)
+                button_preview.setDisabled(True)
+        def fetch_clicked():
+            self.setCursor(QtCore.Qt.WaitCursor)
+            button_fetch.setDisabled(True)
+            # allow the widgets a chance to refresh (disabled/wait).
+            QtCore.QTimer().singleShot(1, fetch_headlines)
+        def preview_clicked():
+            dialog = QtGui.QDialog()
+            dialog.setModal(True)
+            dialog.setWindowFlags(QtCore.Qt.WindowCloseButtonHint)
+            layout = QtGui.QVBoxLayout()
+            text = QtGui.QTextEdit()
+            text.setText(self.headlines.headlines_str)
+            button_close = QtGui.QPushButton('Close')
+            button_close.clicked.connect(dialog.close)
+            layout.addWidget(text)
+            layout.addWidget(button_close)
+            dialog.setLayout(layout)
+            dialog.exec_()
+        button_fetch.clicked.connect(fetch_clicked)
+        button_preview.clicked.connect(preview_clicked)
+        checkbox.clicked.connect(cb_clicked)
+        return [checkbox, button_fetch, button_preview]
+
+
 def main():
     # start the app
     app = QtGui.QApplication(sys.argv)
 
     # initialize and check for gpg and a secret key
     gpg = GnuPG()
+
+    # initialize the module which handles the daily headlines feature.
+    headlines = Headlines()
 
     system = platform.system()
     if system == 'Darwin':
@@ -381,7 +447,7 @@ def main():
             sys.exit(0)
 
     # start the gui
-    gui = AutoCanaryGui(app, gpg)
+    gui = AutoCanaryGui(app, gpg, headlines)
     sys.exit(app.exec_())
 
 
