@@ -250,12 +250,15 @@ class AutoCanaryGui(QtGui.QWidget):
             self.semiannually_q34.hide()
 
         # update freqency text
-        self.quarterly_q1.setText('Q1 {}'.format(year));
-        self.quarterly_q2.setText('Q2 {}'.format(year));
-        self.quarterly_q3.setText('Q3 {}'.format(year));
-        self.quarterly_q4.setText('Q4 {}'.format(year));
-        self.semiannually_q12.setText('Q1 and Q2 {}'.format(year))
-        self.semiannually_q34.setText('Q3 and Q4 {}'.format(year))
+
+        # the QString objects which represent the widget state are unicode
+        # strings, hence the u'...'
+        self.quarterly_q1.setText(u'Q1 {}'.format(year));
+        self.quarterly_q2.setText(u'Q2 {}'.format(year));
+        self.quarterly_q3.setText(u'Q3 {}'.format(year));
+        self.quarterly_q4.setText(u'Q4 {}'.format(year));
+        self.semiannually_q12.setText(u'Q1 and Q2 {}'.format(year))
+        self.semiannually_q34.setText(u'Q3 and Q4 {}'.format(year))
 
     def get_year_period(self):
         frequency = self.frequency.currentText()
@@ -332,7 +335,10 @@ class AutoCanaryGui(QtGui.QWidget):
                 period_date = 'January 1 to June 30'
             elif year_period == 'Q34':
                 period_date = 'July 1 to December 31'
-        message = 'Status: {}\nPeriod: {}, {}\n\n{}'.format(status, period_date, year, text)
+
+        # the QString objects which represent the widget state are unicode
+        # strings, hence the u'...'
+        message = u'Status: {}\nPeriod: {}, {}\n\n{}'.format(status, period_date, year, text)
 
         # sign the file
         key_i = self.key_selection.currentIndex()

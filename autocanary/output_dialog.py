@@ -22,6 +22,7 @@ import common
 
 class OutputDialog(QtGui.QDialog):
 
+    # signed_message is a character string.
     def __init__(self, app, signed_message):
         super(OutputDialog, self).__init__()
         self.app = app
@@ -60,15 +61,18 @@ class OutputDialog(QtGui.QDialog):
         d.setDefaultSuffix('asc')
         d.setNameFilter('*.asc')
         if d.exec_():
+            # this is a QString (character string).
             filename = d.selectedFiles()[0]
 
-            # save output to file
+            filename_encoded = u'{}'.format(filename)
+
+            # save output to file; don't forget to encode.
             try:
-                open(filename, 'w').write(self.signed_message)
-                common.alert('Digitally signed cannary message saved to:\n{0}'.format(filename))
+                open(filename_encoded, 'w').write(self.signed_message.encode('utf-8'))
+                common.alert(u'Digitally signed canary message saved to:\n{0}'.format(filename_encoded))
                 self.accept()
             except:
-                common.alert('Failed saving file:\n{0}'.format(filename))
+                common.alert(u'Failed saving file:\n{0}'.format(filename_encoded))
 
     def copy_to_clipboard_clicked(self):
         if platform.system() == 'Windows':
