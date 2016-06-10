@@ -10,7 +10,7 @@ The first time you're setting up your dev environment:
 
 ```sh
 brew install qt4 pyqt
-sudo pip install py2app
+sudo pip install py2app feedparser
 ```
 
 To run locally:
@@ -78,7 +78,7 @@ A NSIS window will pop up, and once it's done you will have `dist\AutoCanary_Set
 Install the dependencies:
 
 ```sh
-sudo apt-get install -y build-essential fakeroot python-all python-stdeb python-qt4 gnupg2
+sudo apt-get install -y build-essential fakeroot python-all python-stdeb python-qt4 gnupg2 python-feedparser
 ```
 
 To run locally:
@@ -99,7 +99,7 @@ sudo dpkg -i deb_dist/autocanary_*.deb
 Install the dependencies:
 
 ```sh
-sudo yum install rpm-build pyqt4 gnupg2
+sudo yum install rpm-build pyqt4 gnupg2 python-feedparser
 ```
 
 To run locally:
