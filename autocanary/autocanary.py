@@ -336,19 +336,19 @@ class AutoCanaryGui(QtGui.QWidget):
         # add headers
         period_date = year_period
         if frequency == 'Quarterly':
-            if year_period == 'Q1':
-                period_date = 'January 1 to March 31'
-            elif year_period == 'Q2':
-                period_date = 'April 1 to June 30'
-            elif year_period == 'Q3':
-                period_date = 'July 1 to September 30'
-            elif year_period == 'Q4':
-                period_date = 'October 1 to December 31'
+            quarterly_headers = {
+                'Q1': 'January 1 to March 31',
+                'Q2': 'April 1 to June 30',
+                'Q3': 'July 1 to September 30',
+                'Q4': 'October 1 to December 31'
+            }
+            period_date = quarterly_headers[year_period]
         elif frequency == 'Semiannually':
-            if year_period == 'Q12':
-                period_date = 'January 1 to June 30'
-            elif year_period == 'Q34':
-                period_date = 'July 1 to December 31'
+            semiannually_headers = {
+                'Q12': 'January 1 to June 30',
+                'Q34': 'July 1 to December 31'
+            }
+            period_date = semiannually_headers[year_period]
 
         # the QString objects which represent the widget state are unicode
         # strings, hence the u'...'
