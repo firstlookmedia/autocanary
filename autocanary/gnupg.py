@@ -42,31 +42,31 @@ class GnuPG(object):
     def seckeys_list(self):
         p = subprocess.Popen(self.gpg_command + ['--fingerprint', '--with-colons', '--list-secret-keys'], stdout=subprocess.PIPE, creationflags=self.creationflags)
         (stdoutdata, stderrdata) = p.communicate()
-        gpg_output = stdoutdata.split('\n')
+        gpg_output = stdoutdata.split(b'\n')
 
         seckeys = []
         for line in gpg_output:
-            if line.startswith('fpr:'):
-                fp = line.split(':')[9]
+            if line.startswith(b'fpr:'):
+                fp = line.split(b':')[9]
 
                 uids = []
-                p = subprocess.Popen(self.gpg_command + ['--fingerprint', '--with-colons', '--list-keys', fp], stdout=subprocess.PIPE, creationflags=self.creationflags)
+                p = subprocess.Popen(self.gpg_command + ['--fingerprint', '--with-colons', '--list-keys', fp.decode()], stdout=subprocess.PIPE, creationflags=self.creationflags)
                 if p.wait() != 0:
                   continue
                 (stdoutdata, stderrdata) = p.communicate()
-                gpg_output2 = stdoutdata.split('\n')
+                gpg_output2 = stdoutdata.split(b'\n')
 
                 for line in gpg_output2:
-                    if line.startswith('pub:'):
-                        validity = line.split(':')[1]
-                    if line.startswith('uid:'):
-                        vals = line.split(':')
+                    if line.startswith(b'pub:'):
+                        validity = line.split(b':')[1]
+                    if line.startswith(b'uid:'):
+                        vals = line.split(b':')
                         uid_validity = vals[1]
                         uid = vals[9]
-                        if uid_validity not in ['i', 'd', 'r', 'e']:
+                        if uid_validity not in [b'i', b'd', b'r', b'e']:
                             uids.append(uid)
 
-                if validity not in ['i', 'd', 'r', 'e']:
+                if validity not in [b'i', b'd', b'r', b'e']:
                     seckeys.append({'fp': fp, 'uid':uids[0]})
 
         return seckeys

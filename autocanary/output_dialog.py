@@ -16,11 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import platform, tempfile
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import Qt
-import common
+from PyQt5 import QtCore, QtWidgets, QtGui
+from PyQt5.QtCore import Qt
 
-class OutputDialog(QtGui.QDialog):
+from . import common
+
+class OutputDialog(QtWidgets.QDialog):
 
     # signed_message is a character string.
     def __init__(self, app, signed_message):
@@ -28,36 +29,36 @@ class OutputDialog(QtGui.QDialog):
         self.app = app
         self.signed_message = signed_message
         self.setWindowTitle('Digitally Signed Canary Message')
-        self.setWindowIcon(QtGui.QIcon(common.get_resource_path('icon.png')))
+        self.setWindowIcon(common.get_icon())
         self.setWindowFlags(Qt.WindowCloseButtonHint)
         self.setModal(True)
 
         # signed message
         font = QtGui.QFont('Monospace')
         font.setStyleHint(QtGui.QFont.TypeWriter)
-        signed_message_label = QtGui.QLabel(self.signed_message)
+        signed_message_label = QtWidgets.QLabel(self.signed_message)
         signed_message_label.setWordWrap(True)
         signed_message_label.setFont(font)
 
         # buttons
-        buttons_layout = QtGui.QHBoxLayout()
-        save_to_file_button = QtGui.QPushButton('Save to File')
+        buttons_layout = QtWidgets.QHBoxLayout()
+        save_to_file_button = QtWidgets.QPushButton('Save to File')
         save_to_file_button.clicked.connect(self.save_to_file_clicked)
-        copy_to_clipboard_button = QtGui.QPushButton('Copy to Clipboard')
+        copy_to_clipboard_button = QtWidgets.QPushButton('Copy to Clipboard')
         copy_to_clipboard_button.clicked.connect(self.copy_to_clipboard_clicked)
         buttons_layout.addWidget(save_to_file_button)
         buttons_layout.addWidget(copy_to_clipboard_button)
 
         # layout
-        layout = QtGui.QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
         layout.addWidget(signed_message_label)
         layout.addLayout(buttons_layout)
         self.setLayout(layout)
         self.show()
 
     def save_to_file_clicked(self):
-        d = QtGui.QFileDialog(caption='Save to File')
-        d.setAcceptMode(QtGui.QFileDialog.AcceptSave)
+        d = QtWidgets.QFileDialog(caption='Save to File')
+        d.setAcceptMode(QtWidgets.QFileDialog.AcceptSave)
         d.setDefaultSuffix('asc')
         d.setNameFilter('*.asc')
         if d.exec_():

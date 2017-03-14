@@ -16,14 +16,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import sys, datetime, platform
-from PyQt4 import QtCore, QtGui
-from gnupg import GnuPG
-from headlines import Headlines
-from settings import Settings
-from output_dialog import OutputDialog
-import common
+from PyQt5 import QtCore, QtWidgets
 
-class AutoCanaryGui(QtGui.QWidget):
+from .gnupg import GnuPG
+from .headlines import Headlines
+from .settings import Settings
+from .output_dialog import OutputDialog
+
+from . import common
+
+class AutoCanaryGui(QtWidgets.QMainWindow):
 
     def __init__(self, app, gpg, headlines):
         super(AutoCanaryGui, self).__init__()
@@ -32,14 +34,14 @@ class AutoCanaryGui(QtGui.QWidget):
         self.headlines = headlines
         self.settings = Settings()
         self.setWindowTitle('AutoCanary')
-        self.setWindowIcon(QtGui.QIcon(common.get_resource_path('icon.png')))
+        self.setWindowIcon(common.get_icon())
 
         # frequency, year
-        self.date_col1_layout = QtGui.QVBoxLayout()
+        self.date_col1_layout = QtWidgets.QVBoxLayout()
 
-        self.frequency_layout = QtGui.QHBoxLayout()
-        self.frequency_label = QtGui.QLabel('Frequency')
-        self.frequency = QtGui.QComboBox()
+        self.frequency_layout = QtWidgets.QHBoxLayout()
+        self.frequency_label = QtWidgets.QLabel('Frequency')
+        self.frequency = QtWidgets.QComboBox()
         frequency_options = ["Weekly", "Monthly", "Quarterly", "Semiannually"]
         for option in frequency_options:
             self.frequency.addItem(option)
@@ -50,9 +52,9 @@ class AutoCanaryGui(QtGui.QWidget):
         self.frequency_layout.addWidget(self.frequency)
         self.frequency.activated.connect(self.update_date)
 
-        self.year_layout = QtGui.QHBoxLayout()
-        self.year_label = QtGui.QLabel('Year')
-        self.year = QtGui.QComboBox()
+        self.year_layout = QtWidgets.QHBoxLayout()
+        self.year_label = QtWidgets.QLabel('Year')
+        self.year = QtWidgets.QComboBox()
         y = datetime.date.today().year
         year_options = [str(y-1), str(y), str(y+1)]
         for option in year_options:
@@ -65,16 +67,16 @@ class AutoCanaryGui(QtGui.QWidget):
         self.year.activated.connect(self.update_date)
 
         # weekly dropdown
-        self.weekly_layout = QtGui.QHBoxLayout()
-        self.weekly_label = QtGui.QLabel('Week')
-        self.weekly_dropdown = QtGui.QComboBox()
+        self.weekly_layout = QtWidgets.QHBoxLayout()
+        self.weekly_label = QtWidgets.QLabel('Week')
+        self.weekly_dropdown = QtWidgets.QComboBox()
         self.weekly_layout.addWidget(self.weekly_label)
         self.weekly_layout.addWidget(self.weekly_dropdown)
 
         # monthly dropdown
-        self.monthly_layout = QtGui.QHBoxLayout()
-        self.monthly_label = QtGui.QLabel('Month')
-        self.monthly_dropdown = QtGui.QComboBox()
+        self.monthly_layout = QtWidgets.QHBoxLayout()
+        self.monthly_label = QtWidgets.QLabel('Month')
+        self.monthly_dropdown = QtWidgets.QComboBox()
         monthly_options = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
         for option in monthly_options:
             self.monthly_dropdown.addItem(option)
@@ -82,12 +84,12 @@ class AutoCanaryGui(QtGui.QWidget):
         self.monthly_layout.addWidget(self.monthly_dropdown)
 
         # quarterly radio buttons
-        self.quarterly_layout = QtGui.QHBoxLayout()
-        self.quarterly_label = QtGui.QLabel('Quarter')
-        self.quarterly_q1 = QtGui.QRadioButton("")
-        self.quarterly_q2 = QtGui.QRadioButton("")
-        self.quarterly_q3 = QtGui.QRadioButton("")
-        self.quarterly_q4 = QtGui.QRadioButton("")
+        self.quarterly_layout = QtWidgets.QHBoxLayout()
+        self.quarterly_label = QtWidgets.QLabel('Quarter')
+        self.quarterly_q1 = QtWidgets.QRadioButton("")
+        self.quarterly_q2 = QtWidgets.QRadioButton("")
+        self.quarterly_q3 = QtWidgets.QRadioButton("")
+        self.quarterly_q4 = QtWidgets.QRadioButton("")
         self.quarterly_layout.addWidget(self.quarterly_label)
         self.quarterly_layout.addWidget(self.quarterly_q1)
         self.quarterly_layout.addWidget(self.quarterly_q2)
@@ -95,16 +97,16 @@ class AutoCanaryGui(QtGui.QWidget):
         self.quarterly_layout.addWidget(self.quarterly_q4)
 
         # semiannual radio buttons
-        self.semiannually_layout = QtGui.QHBoxLayout()
-        self.semiannually_label = QtGui.QLabel('Semester')
-        self.semiannually_q12 = QtGui.QRadioButton("")
-        self.semiannually_q34 = QtGui.QRadioButton("")
+        self.semiannually_layout = QtWidgets.QHBoxLayout()
+        self.semiannually_label = QtWidgets.QLabel('Semester')
+        self.semiannually_q12 = QtWidgets.QRadioButton("")
+        self.semiannually_q34 = QtWidgets.QRadioButton("")
         self.semiannually_layout.addWidget(self.semiannually_label)
         self.semiannually_layout.addWidget(self.semiannually_q12)
         self.semiannually_layout.addWidget(self.semiannually_q34)
 
         # date layout
-        self.date_layout = QtGui.QVBoxLayout()
+        self.date_layout = QtWidgets.QVBoxLayout()
         self.date_layout.addLayout(self.frequency_layout)
         self.date_layout.addLayout(self.year_layout)
         self.date_layout.addLayout(self.weekly_layout)
@@ -115,9 +117,9 @@ class AutoCanaryGui(QtGui.QWidget):
         self.update_date()
 
         # status
-        self.status_layout = QtGui.QHBoxLayout()
-        self.status_label = QtGui.QLabel('Status')
-        self.status = QtGui.QComboBox()
+        self.status_layout = QtWidgets.QHBoxLayout()
+        self.status_label = QtWidgets.QLabel('Status')
+        self.status = QtWidgets.QComboBox()
         status_options = ["All good", "It's complicated"]
         for option in status_options:
             self.status.addItem(option)
@@ -128,7 +130,7 @@ class AutoCanaryGui(QtGui.QWidget):
         self.status_layout.addWidget(self.status)
 
         # canary text box
-        self.textbox = QtGui.QTextEdit()
+        self.textbox = QtWidgets.QTextEdit()
         self.textbox.setText(self.settings.get_text())
 
         # headlines controls: [checkbox, button, button].
@@ -136,7 +138,7 @@ class AutoCanaryGui(QtGui.QWidget):
 
         # key selection
         seckeys = gpg.seckeys_list()
-        self.key_selection = QtGui.QComboBox()
+        self.key_selection = QtWidgets.QComboBox()
         for seckey in seckeys:
             uid = seckey['uid']
             if len(uid) >= 53:
@@ -153,21 +155,21 @@ class AutoCanaryGui(QtGui.QWidget):
             self.key_selection.setCurrentIndex(key_i)
 
         # buttons
-        self.buttons_layout = QtGui.QHBoxLayout()
-        self.sign_save_button = QtGui.QPushButton('Save and Sign')
+        self.buttons_layout = QtWidgets.QHBoxLayout()
+        self.sign_save_button = QtWidgets.QPushButton('Save and Sign')
         self.sign_save_button.clicked.connect(self.sign_save_clicked)
-        self.sign_once = QtGui.QPushButton('One-Time Sign')
+        self.sign_once = QtWidgets.QPushButton('One-Time Sign')
         self.sign_once.clicked.connect(self.sign_once_clicked)
         self.buttons_layout.addWidget(self.sign_save_button)
         self.buttons_layout.addWidget(self.sign_once)
 
         # headlines controls.
-        self.headline_controls_layout = QtGui.QHBoxLayout()
+        self.headline_controls_layout = QtWidgets.QHBoxLayout()
         for hl_control in self.headlines_controls:
             self.headline_controls_layout.addWidget(hl_control)
 
         # layout
-        self.layout = QtGui.QVBoxLayout()
+        self.layout = QtWidgets.QVBoxLayout()
         self.layout.addLayout(self.date_layout)
         self.layout.addLayout(self.status_layout)
         self.layout.addWidget(self.textbox)
@@ -367,10 +369,10 @@ class AutoCanaryGui(QtGui.QWidget):
             common.alert('Failed to sign message.')
 
     def get_headlines_controls(self):
-        checkbox = QtGui.QCheckBox('Add Recent News Headlines')
-        button_fetch = QtGui.QPushButton('Fetch Headlines')
+        checkbox = QtWidgets.QCheckBox('Add Recent News Headlines')
+        button_fetch = QtWidgets.QPushButton('Fetch Headlines')
         button_fetch.setDisabled(True)
-        button_preview = QtGui.QPushButton('Preview Headlines')
+        button_preview = QtWidgets.QPushButton('Preview Headlines')
         button_preview.setDisabled(True)
         def fetch_headlines():
             # synchronous.
@@ -397,13 +399,13 @@ class AutoCanaryGui(QtGui.QWidget):
             # allow the widgets a chance to refresh (disabled/wait).
             QtCore.QTimer().singleShot(1, fetch_headlines)
         def preview_clicked():
-            dialog = QtGui.QDialog()
+            dialog = QtWidgets.QDialog()
             dialog.setModal(True)
             dialog.setWindowFlags(QtCore.Qt.WindowCloseButtonHint)
-            layout = QtGui.QVBoxLayout()
-            text = QtGui.QTextEdit()
+            layout = QtWidgets.QVBoxLayout()
+            text = QtWidgets.QTextEdit()
             text.setText(self.headlines.headlines_str)
-            button_close = QtGui.QPushButton('Close')
+            button_close = QtWidgets.QPushButton('Close')
             button_close.clicked.connect(dialog.close)
             layout.addWidget(text)
             layout.addWidget(button_close)
@@ -417,7 +419,7 @@ class AutoCanaryGui(QtGui.QWidget):
 
 def main():
     # start the app
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
 
     # initialize and check for gpg and a secret key
     gpg = GnuPG()

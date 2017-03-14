@@ -16,8 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import common
 import feedparser
+
+from . import common
 
 config = {
     'feed_url': 'https://en.wikinews.org/w/index.php?title=Special:NewsFeed&feed=rss&categories=Published&notcategories=No%20publish|Archived|AutoArchived|disputed&namespace=0&count=5&ordermethod=categoryadd&stablepages=only',

@@ -16,16 +16,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 import os, sys, inspect, platform
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtWidgets, QtGui
 
 def get_resource_path(filename):
     system = platform.system()
 
-    if getattr(sys, 'autocanary_dev_mode', False):
+    if getattr(sys, 'autocanary_dev', False):
         # Look for resources directory relative to python file
         prefix = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))), 'share')
 
-    elif p == 'Linux' and sys.argv and sys.argv[0].startswith(sys.prefix):
+    elif system == 'Linux' and sys.argv and sys.argv[0].startswith(sys.prefix):
         # AutoCanary is installed systemwide in Linux
         prefix = os.path.join(sys.prefix, 'share/autocanary')
 
@@ -39,10 +39,17 @@ def get_resource_path(filename):
 
     return os.path.join(prefix, filename)
 
-def alert(msg, icon=QtGui.QMessageBox.Warning):
-    d = QtGui.QMessageBox()
+icon = None
+def get_icon():
+    global icon
+    if not icon:
+        icon = QtGui.QIcon(get_resource_path('icon.png'))
+    return icon
+
+def alert(msg, icon=QtWidgets.QMessageBox.Warning):
+    d = QtWidgets.QMessageBox()
     d.setWindowTitle('AutoCanary')
-    d.setWindowIcon(QtGui.QIcon(get_resource_path('icon.png')))
+    d.setWindowIcon(get_icon())
     d.setText(msg)
     d.setIcon(icon)
     d.exec_()
