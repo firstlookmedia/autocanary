@@ -21,7 +21,7 @@ import feedparser
 from . import common
 
 config = {
-    'feed_url': 'https://en.wikinews.org/w/index.php?title=Special:NewsFeed&feed=rss&categories=Published&notcategories=No%20publish|Archived|AutoArchived|disputed&namespace=0&count=5&ordermethod=categoryadd&stablepages=only',
+    'feed_url': b'https://en.wikinews.org/w/index.php?title=Special:NewsFeed&feed=rss&categories=Published&notcategories=No%20publish|Archived|AutoArchived|disputed&namespace=0&count=5&ordermethod=categoryadd&stablepages=only',
     # --- waiting for unicode fix.
     #'headline_bullet': u"\u2022"
     'headline_bullet': '> '
@@ -39,8 +39,8 @@ class Headlines(object):
 
         # --- available keys: summary_detail published_parsed links title
         # comments summary guidislink title_detail link published id
-        entry_data = map (lambda x: (x.title,), feed.entries)
-        headlines = map(lambda x: "{}{}".format(config['headline_bullet'], x[0]), entry_data)
+        entry_data = list(map(lambda x: (x.title,), feed.entries))
+        headlines = list(map(lambda x: "{}{}".format(config['headline_bullet'], x[0]), entry_data))
         if len(headlines) == 0:
             self.have_headlines = False
             common.alert("Couldn't fetch headlines.")
