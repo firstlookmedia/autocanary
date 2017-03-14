@@ -76,9 +76,7 @@ class GnuPG(object):
 
         # write message to file
         filename = '{0}/message'.format(tempdir)
-
-        # text is a character string: don't forget to encode before writing.
-        open(filename, 'w').write(text.encode('utf-8'))
+        open(filename, 'w').write(text)
 
         # sign the file
         p = subprocess.Popen(self.gpg_command + ['--use-agent', '--default-key', signing_fp, '--no-emit-version', '--no-comments', '--clearsign', filename], creationflags=self.creationflags)
