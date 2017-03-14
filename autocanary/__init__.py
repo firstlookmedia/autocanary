@@ -29,6 +29,7 @@ class AutoCanaryGui(QtWidgets.QMainWindow):
 
     def __init__(self, app, gpg, headlines):
         super(AutoCanaryGui, self).__init__()
+
         self.app = app
         self.gpg = gpg
         self.headlines = headlines
@@ -169,14 +170,17 @@ class AutoCanaryGui(QtWidgets.QMainWindow):
             self.headline_controls_layout.addWidget(hl_control)
 
         # layout
-        self.layout = QtWidgets.QVBoxLayout()
-        self.layout.addLayout(self.date_layout)
-        self.layout.addLayout(self.status_layout)
-        self.layout.addWidget(self.textbox)
-        self.layout.addLayout(self.headline_controls_layout)
-        self.layout.addWidget(self.key_selection)
-        self.layout.addLayout(self.buttons_layout)
-        self.setLayout(self.layout)
+        layout = QtWidgets.QVBoxLayout()
+        layout.addLayout(self.date_layout)
+        layout.addLayout(self.status_layout)
+        layout.addWidget(self.textbox)
+        layout.addLayout(self.headline_controls_layout)
+        layout.addWidget(self.key_selection)
+        layout.addLayout(self.buttons_layout)
+        central_widget = QtWidgets.QWidget()
+        central_widget.setLayout(layout)
+        self.setCentralWidget(central_widget)
+
         self.show()
 
     def update_date(self):
