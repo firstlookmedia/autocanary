@@ -67,7 +67,7 @@ class GnuPG(object):
                             uids.append(uid)
 
                 if validity not in [b'i', b'd', b'r', b'e']:
-                    seckeys.append({'fp': fp, 'uid':uids[0]})
+                    seckeys.append({'fp': fp.decode(), 'uid':uids[0].decode()})
 
         return seckeys
 
