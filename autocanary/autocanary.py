@@ -264,10 +264,10 @@ class AutoCanaryGui(QtGui.QWidget):
 
         # the QString objects which represent the widget state are unicode
         # strings, hence the u'...'
-        self.quarterly_q1.setText(u'Q1 {}'.format(year));
-        self.quarterly_q2.setText(u'Q2 {}'.format(year));
-        self.quarterly_q3.setText(u'Q3 {}'.format(year));
-        self.quarterly_q4.setText(u'Q4 {}'.format(year));
+        self.quarterly_q1.setText(u'Q1 {}'.format(year))
+        self.quarterly_q2.setText(u'Q2 {}'.format(year))
+        self.quarterly_q3.setText(u'Q3 {}'.format(year))
+        self.quarterly_q4.setText(u'Q4 {}'.format(year))
         self.semiannually_q12.setText(u'Q1 and Q2 {}'.format(year))
         self.semiannually_q34.setText(u'Q3 and Q4 {}'.format(year))
 
