@@ -58,7 +58,7 @@ class Settings(object):
 
     def load(self):
         if os.path.isfile(self.settings_path):
-            self.settings = pickle.load(open(self.settings_path))
+            self.settings = pickle.load(open(self.settings_path, 'rb'))
         else:
             # default settings
             self.settings = {
@@ -78,4 +78,4 @@ General Counsel
             }
 
     def save(self):
-        pickle.dump(self.settings, open(self.settings_path, 'w'))
+        pickle.dump(self.settings, open(self.settings_path, 'wb'))
