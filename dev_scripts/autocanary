@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+
+# Load autocanary module and resources from the source code tree
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.autocanary_dev = True
+
+import autocanary
+autocanary.main()

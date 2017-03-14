@@ -1,2 +1,0 @@
-import autocanary
-autocanary.main()

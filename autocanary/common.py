@@ -18,21 +18,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os, sys, inspect, platform
 from PyQt4 import QtCore, QtGui
 
-def get_image_path(filename):
-    if platform.system() == 'Linux':
-        prefix = os.path.join(sys.prefix, 'share/autocanary')
-    elif platform.system() == 'Windows':
-        prefix = os.path.dirname(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))))
-    else:
-        prefix = os.path.dirname(__file__)
+def get_resource_path(filename):
+    system = platform.system()
 
-    image_path = os.path.join(prefix, filename)
-    return image_path
+    if getattr(sys, 'autocanary_dev_mode', False):
+        # Look for resources directory relative to python file
+        prefix = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))), 'share')
+
+    elif p == 'Linux' and sys.argv and sys.argv[0].startswith(sys.prefix):
+        # AutoCanary is installed systemwide in Linux
+        prefix = os.path.join(sys.prefix, 'share/autocanary')
+
+    elif getattr(sys, 'frozen', False):
+        # Check if app is "frozen"
+        # https://pythonhosted.org/PyInstaller/#run-time-information
+        if system == 'Darwin':
+            prefix = os.path.join(sys._MEIPASS, 'share')
+        elif system == 'Windows':
+            prefix = os.path.join(os.path.dirname(sys.executable), 'share')
+
+    return os.path.join(prefix, filename)
 
 def alert(msg, icon=QtGui.QMessageBox.Warning):
     d = QtGui.QMessageBox()
     d.setWindowTitle('AutoCanary')
-    d.setWindowIcon(QtGui.QIcon(get_image_path('icon.png')))
+    d.setWindowIcon(QtGui.QIcon(get_resource_path('icon.png')))
     d.setText(msg)
     d.setIcon(icon)
     d.exec_()

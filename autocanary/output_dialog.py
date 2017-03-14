@@ -28,7 +28,7 @@ class OutputDialog(QtGui.QDialog):
         self.app = app
         self.signed_message = signed_message
         self.setWindowTitle('Digitally Signed Canary Message')
-        self.setWindowIcon(QtGui.QIcon(common.get_image_path('icon.png')))
+        self.setWindowIcon(QtGui.QIcon(common.get_resource_path('icon.png')))
         self.setWindowFlags(Qt.WindowCloseButtonHint)
         self.setModal(True)
 

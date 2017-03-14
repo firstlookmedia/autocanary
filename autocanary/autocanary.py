@@ -32,7 +32,7 @@ class AutoCanaryGui(QtGui.QWidget):
         self.headlines = headlines
         self.settings = Settings()
         self.setWindowTitle('AutoCanary')
-        self.setWindowIcon(QtGui.QIcon(common.get_image_path('icon.png')))
+        self.setWindowIcon(QtGui.QIcon(common.get_resource_path('icon.png')))
 
         # frequency, year
         self.date_col1_layout = QtGui.QVBoxLayout()

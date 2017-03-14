@@ -2,21 +2,22 @@
 
 ## Mac OS X
 
-Install the [latest python 2.x](https://www.python.org/downloads/) from python.org. If you use the built-in version of python that comes with OS X, your .app might not run on other people's computers.
+Install Xcode from the Mac App Store. Once it's installed, run it for the first time to set it up.
 
-To install the right dependencies, you need homebrew and pip installed on your Mac. Follow instructions at http://brew.sh/ to install homebrew, and run `sudo easy_install pip` to install pip.
+Install Python 3.5.3 from https://www.python.org/downloads/release/python-353/. I downloaded `python-3.5.3-macosx10.6.pkg`. (Note that PyQt does not yet work with Python 3.6.)
 
-The first time you're setting up your dev environment:
+Install Qt 5.7.1 from https://www.qt.io/download-open-source/. I downloaded `qt-unified-mac-x64-2.0.4-online.dmg`. In the installer, you can skip making an account, and all you need is Qt 5.7 for macOS.
+
+Now install some python dependencies with pip (note, there's issues building a .app if you install this in a virtualenv):
 
 ```sh
-brew install qt4 pyqt
-sudo pip install py2app feedparser
+sudo pip3 install -r install/requirements.txt
 ```
 
-To run locally:
+To run during development:
 
 ```sh
-python autocanary.py
+./dev_scripts/autocanary
 ```
 
 To build the .app:
@@ -35,82 +36,78 @@ install/build_osx.sh --sign
 
 Now you should have `dist/AutoCanary.pkg`.
 
-
 ## Windows
 
-Setting up your dev environment:
+### Setting up your dev environment
 
-* Download and install the latest python 2.7 from https://www.python.org/downloads/ -- make sure you install the 32-bit version.
-* Right click on Computer, go to Properties. Click "Advanced system settings". Click Environment Variables. Under "System variables" double-click on Path to edit it. Add `;C:\Python27;C:\Python27\Scripts` to the end. Now you can just type `python` to run python scripts in the command prompt.
-* Go to http://www.riverbankcomputing.com/software/pyqt/download and download the latest PyQt4 for Windows for python 2.7, 32-bit (I downloaded `PyQt4-4.11-gpl-Py2.7-Qt4.8.6-x32.exe`), then install it.
-* Go to http://www.py2exe.org/ and download the latest 32-bit version of py2exe (I downloaded `py2exe-0.6.9.win32-py2.7.exe`), then install it.
-* Go to http://sourceforge.net/projects/pywin32/ and download and install the latest 32-bit pywin32 binary for python 2.7. I downloaded `pywin32-219.win32-py2.7.exe`.
-* Download and install the [Microsoft Visual C++ 2008 Redistributable Package (x86)](http://www.microsoft.com/en-us/download/details.aspx?id=29).
-* Copy `MSVCP90.dll` (I found mine in `C:\Windows\winsxs\*`) into `C:\Python27\DLLs`.
+Download the latest Python 3.5.2, 32-bit (x86) from https://www.python.org/downloads/release/python-352/ (note that there's a pyinstaller/pywin32 bug that prevents 3.6.x from working). I downloaded `python-3.5.2.exe`. When installing it, make sure to check the "Add Python 3.5 to PATH" checkbox on the first page of the installer.
+
+Open a command prompt, cd to the onionshare folder, and install dependencies with pip:
+
+```cmd
+pip3 install -r install\requirements.txt
+```
+
+Download and install Qt5 from https://www.qt.io/download-open-source/. I downloaded `qt-unified-windows-x86-2.0.4-online.exe`. There's no need to login to a Qt account during installation. Make sure you install the latest Qt 5.x. I installed Qt 5.7.
+
+To run during development:
+
+```
+python dev_scripts\autocanary
+```
+
+If you want to build a .exe:
+
+These instructions include adding folders to the path in Windows. To do this, go to Start and type "advanced system settings", and open "View advanced system settings" in the Control Panel. Click Environment Variables. Under "System variables" double-click on Path. From there you can add and remove folders that are available in the PATH.
+
+Download and install the 32-bit [Visual C++ Redistributable for Visual Studio 2015](https://www.microsoft.com/en-US/download/details.aspx?id=48145). I downloaded `vc_redist.x86.exe`.
+
+Download and install the standalone [Windows 10 SDK](https://dev.windows.com/en-us/downloads/windows-10-sdk). Note that you may not need this if you already have Visual Studio. Add the following directories to the path:
+
+* `C:\Program Files (x86)\Windows Kits\10\bin\x86`
+* `C:\Program Files (x86)\Windows Kits\10\Redist\ucrt\DLLs\x86`
+* `C:\Users\user\AppData\Local\Programs\Python\Python35-32\Lib\site-packages\PyQt5\Qt\bin`
 
 If you want to build the installer:
 
-* Go to http://nsis.sourceforge.net/Download and download the latest NSIS. I downloaded `nsis-3.0b0-setup.exe`.
-* Right click on Computer, go to Properties. Click "Advanced system settings". Click Environment Variables. Under "System variables" double-click on Path to edit it. Add `;C:\Program Files (x86)\NSIS` to the end. Now you can just type `makensisw [script]` to build an installer.
+* Go to http://nsis.sourceforge.net/Download and download the latest NSIS. I downloaded `nsis-3.01-setup.exe`.
+* Add `C:\Program Files (x86)\NSIS` to the path.
 
 If you want to sign binaries with Authenticode:
 
-* Go to http://msdn.microsoft.com/en-us/vstudio/aa496123 and install the latest .NET Framework. I installed `.NET Framework 4.5.1`.
-* Go to http://www.microsoft.com/en-us/download/confirmation.aspx?id=8279 and install the Windows SDK.
-* Right click on Computer, go to Properties. Click "Advanced system settings". Click Environment Variables. Under "System variables" double-click on Path to edit it. Add `;C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin` to the end.
-* You'll also, of course, need a code signing certificate. I roughly followed [this guide](http://blog.assarbad.net/20110513/startssl-code-signing-certificate/) to make one using my StartSSL account.
+* You'll need a code signing certificate.
 * Once you get a code signing key and certificate and covert it to a pfx file, import it into your certificate store.
 
 ### To make a .exe:
 
-* Open a command prompt, cd into the autocanary directory, and type: `python setup.py py2exe`. Inside the `dist` folder you will find `autocanary.exe`.
+For PyInstaller to work, you might need to edit `Scripts\pyinstaller-script.py` in your Python 3.5 folder, to work around [this bug](https://stackoverflow.com/questions/31808180/installing-pyinstaller-via-pip-leads-to-failed-to-create-process) in pip.
+
+* Open a command prompt, cd into the autocanary directory, and type: `pyinstaller install\autocanary.spec`. `autocanary.exe` and all of their supporting files will get created inside the `dist` folder.
 
 ### To build the installer:
 
-Note that you must have a code signing certificate installed in order to use the `build_exe.bat` script, because it tries code signing `autocanary.exe`, as well as `AutoCanary_Setup.exe` and `uninstall.exe`.
+Note that you must have a codesigning certificate installed in order to use the `install\build_exe.bat` script, because it codesigns `autocanary.exe`, `uninstall.exe`, and `AutoCanary_Setup.exe`.
 
-Open a command prompt, cd to the autocanary directory, and type: `install\build_exe.bat`
+Open a command prompt, cd to the onionshare directory, and type: `install\build_exe.bat`
 
-A NSIS window will pop up, and once it's done you will have `dist\AutoCanary_Setup.exe`.
+This will prompt you to codesign three binaries and execute one unsigned binary. When you're done clicking through everything you will have `dist\AutoCanary_Setup.exe`.
 
-## Linux (Debian-based)
+## Linux
 
 Install the dependencies:
 
-```sh
-sudo apt-get install -y build-essential fakeroot python-all python-stdeb python-qt4 gnupg2 python-feedparser
-```
+For Debian-like distros: `sudo apt install -y build-essential fakeroot python3-all python3-stdeb python3-qt5 python3-feedparser gnupg2`
 
-To run locally:
+For Fedora-like distros: `sudo dnf install rpm-build python3-qt5 gnupg2 python3-feedparser`
+
+To run during development:
 
 ```sh
 python autocanary.py
 ```
 
-Build and install the .deb:
+You can also build AutoCanary packages to install:
 
-```sh
-install/build_deb.sh
-sudo dpkg -i deb_dist/autocanary_*.deb
-```
+Create a .deb on Debian-like distros: `./install/build_deb.sh`
 
-## Linux (RedHat-based)
-
-Install the dependencies:
-
-```sh
-sudo yum install rpm-build pyqt4 gnupg2 python-feedparser
-```
-
-To run locally:
-
-```sh
-python autocanary.py
-```
-
-Build and install the .rpm:
-
-```sh
-install/build_rpm.sh
-sudo yum install -y dist/autocanary-*.rpm
-```
+Create a .rpm on Fedora-like distros: `./install/build_rpm.sh`
