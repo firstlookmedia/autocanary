@@ -17,6 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import feedparser
+# Avoid feedparser python3 bug, see https://github.com/manolomartinez/greg/issues/47
+feedparser.PREFERRED_XML_PARSERS.remove('drv_libxml2')
 
 from . import common
 
