@@ -9,7 +9,7 @@ VERSION=`cat version`
 rm -r deb_dist >/dev/null 2>&1
 
 # build binary package
-python setup.py --command-packages=stdeb.command bdist_deb
+python3 setup.py --command-packages=stdeb.command bdist_deb
 
 # install it
 echo ""
