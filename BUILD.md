@@ -96,7 +96,7 @@ This will prompt you to codesign three binaries and execute one unsigned binary.
 
 Install the dependencies:
 
-For Debian-like distros: `sudo apt install -y build-essential fakeroot python3-all python3-stdeb python3-qt5 python3-feedparser gnupg2`
+For Debian-like distros: `sudo apt install -y build-essential fakeroot python3-all python3-stdeb python3-pyqt5 python3-feedparser gnupg2`
 
 For Fedora-like distros: `sudo dnf install rpm-build python3-qt5 gnupg2 python3-feedparser`
 

@@ -9,9 +9,9 @@ VERSION=`cat version`
 rm -r build dist >/dev/null 2>&1
 
 # build binary package
-python setup.py bdist_rpm --requires="pyqt4"
+python3 setup.py bdist_rpm --requires="python3-qt5 python3-feedparser gnupg2"
 
 # install it
 echo ""
 echo "To install, run:"
-echo "sudo yum install dist/autocanary-$VERSION-1.noarch.rpm"
+echo "sudo dnf install dist/autocanary-$VERSION-1.noarch.rpm"
