@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-import platform, tempfile
+import tempfile
 from PyQt5 import QtCore, QtWidgets, QtGui
 from PyQt5.QtCore import Qt
 
@@ -76,21 +76,8 @@ class OutputDialog(QtWidgets.QDialog):
                 common.alert(u'Failed saving file:\n{0}'.format(filename_encoded))
 
     def copy_to_clipboard_clicked(self):
-        if platform.system() == 'Windows':
-            # Qt's QClipboard isn't working in Windows
-            import ctypes
-            GMEM_DDESHARE = 0x2000
-            ctypes.windll.user32.OpenClipboard(None)
-            ctypes.windll.user32.EmptyClipboard()
-            hcd = ctypes.windll.kernel32.GlobalAlloc(GMEM_DDESHARE, len(bytes(self.signed_message))+1)
-            pch_data = ctypes.windll.kernel32.GlobalLock(hcd)
-            ctypes.cdll.msvcrt.strcpy(ctypes.c_char_p(pch_data), bytes(self.signed_message))
-            ctypes.windll.kernel32.GlobalUnlock(hcd)
-            ctypes.windll.user32.SetClipboardData(1, hcd)
-            ctypes.windll.user32.CloseClipboard()
-        else:
-            clipboard = self.app.clipboard()
-            clipboard.setText(self.signed_message)
+        clipboard = self.app.clipboard()
+        clipboard.setText(self.signed_message)
 
         common.alert('Digitally signed cannary message copied to clipboard')
         self.accept()
