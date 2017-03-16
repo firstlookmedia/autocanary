@@ -21,7 +21,7 @@ import feedparser
 from . import common
 
 config = {
-    'feed_url': b'https://en.wikinews.org/w/index.php?title=Special:NewsFeed&feed=rss&categories=Published&notcategories=No%20publish|Archived|AutoArchived|disputed&namespace=0&count=5&ordermethod=categoryadd&stablepages=only',
+    'feed_url': 'https://en.wikinews.org/w/index.php?title=Special:NewsFeed&feed=rss&categories=Published&notcategories=No%20publish|Archived|AutoArchived|disputed&namespace=0&count=5&ordermethod=categoryadd&stablepages=only',
     # --- waiting for unicode fix.
     #'headline_bullet': u"\u2022"
     'headline_bullet': '> '
