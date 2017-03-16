@@ -1,29 +1,30 @@
 #!/bin/bash
-
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
-TITLE=AutoCanary
-
 cd $ROOT
 
-# deleting dist
-echo Deleting dist folder
-rm -rf $ROOT/dist &>/dev/null 2>&1
+# Deleting old build folders folders
+echo Deleting old build folders folders
+rm -rf $ROOT/build $ROOT/dist &>/dev/null 2>&1
 
-# build the .app
+# Build the .app
 echo Building AutoCanary.app
-python setup.py py2app
+pyinstaller install/pyinstaller.spec
 
-if [ "$1" = "--sign" ]; then
+if [ "$1" = "--release" ]; then
+  mkdir -p dist
+  APP_PATH="dist/AutoCanary.app"
+  PKG_PATH="dist/AutoCanary.pkg"
+  IDENTITY_NAME_APPLICATION="Developer ID Application: FIRST LOOK PRODUCTIONS, INC."
+  IDENTITY_NAME_INSTALLER="Developer ID Installer: FIRST LOOK PRODUCTIONS, INC."
 
-  SIGNING_IDENTITY_APP="Developer ID Application: Micah Lee"
-  SIGNING_IDENTITY_INSTALLER="Developer ID Installer: Micah Lee"
+  echo "Codesigning the app bundle"
+  codesign --deep -s "$IDENTITY_NAME_APPLICATION" "$APP_PATH"
 
-  # codesign the app
-  echo Codesigning and building installer
-  python $ROOT/install/prepare_for_codesign.py
-  cd $ROOT/dist
-  codesign --deep --verbose --sign "$SIGNING_IDENTITY_APP" AutoCanary.app
-  productbuild --component AutoCanary.app /Applications AutoCanary.pkg --sign "$SIGNING_IDENTITY_INSTALLER"
-  cd $ROOT
+  echo "Creating an installer"
+  productbuild --sign "$IDENTITY_NAME_INSTALLER" --component "$APP_PATH" /Applications "$PKG_PATH"
 
+  echo "Cleaning up"
+  rm -rf "$APP_PATH"
+
+  echo "All done, your installer is in: $PKG_PATH"
 fi
