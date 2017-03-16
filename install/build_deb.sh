@@ -3,7 +3,8 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 cd $DIR
 
-VERSION=`cat version`
+VERSION=`cat share/version`
+VERSION=${VERSION:1}
 
 # clean up from last build
 rm -r deb_dist >/dev/null 2>&1
