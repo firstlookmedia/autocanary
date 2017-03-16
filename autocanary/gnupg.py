@@ -15,7 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-import subprocess, os, platform, tempfile, shutil, codecs
+import subprocess, os, platform, tempfile, shutil
 
 class GnuPG(object):
 
@@ -87,7 +87,7 @@ class GnuPG(object):
 
         # read the signed message
         signed_filename = '{0}/message.asc'.format(tempdir)
-        signed_message = codecs.open(signed_filename, 'r', 'utf-8').read()
+        signed_message = open(signed_filename, 'r').read()
         shutil.rmtree(tempdir)
 
         return signed_message
