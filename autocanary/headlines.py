@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+import urllib.request
 import feedparser
 
 from . import common
@@ -34,8 +35,13 @@ class Headlines(object):
         self.headlines_str = None
 
     def fetch_headlines(self):
+        # Download the feed
+        response = urllib.request.urlopen(config['feed_url'])
+        data = response.read()
+        text = data.decode('utf-8')
+
         # --- feed.entries is empty list on fail.
-        feed = feedparser.parse(config['feed_url'])
+        feed = feedparser.parse(text)
 
         # --- available keys: summary_detail published_parsed links title
         # comments summary guidislink title_detail link published id
