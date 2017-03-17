@@ -115,8 +115,6 @@ class AutoCanaryGui(QtWidgets.QMainWindow):
         self.date_layout.addLayout(self.quarterly_layout)
         self.date_layout.addLayout(self.semiannually_layout)
 
-        self.update_date()
-
         # status
         self.status_layout = QtWidgets.QHBoxLayout()
         self.status_label = QtWidgets.QLabel('Status')
@@ -181,6 +179,7 @@ class AutoCanaryGui(QtWidgets.QMainWindow):
         central_widget.setLayout(layout)
         self.setCentralWidget(central_widget)
 
+        self.update_date()
         self.show()
 
     def update_date(self):
