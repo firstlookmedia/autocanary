@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+
+* Packaged for Linux
+
 ## 0.2.0
 
 * Optional feature to add recent news headlines to the bottom of canary messages
