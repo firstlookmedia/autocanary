@@ -106,7 +106,7 @@ jobs:
           name: Install dependencies
           command: |
             apt-get update
-            DEBIAN_FRONTEND=noninteractive apt-get install -y git ssh ruby-dev rubygems build-essential fakeroot python-all python3-all python3-stdeb python3-pyqt5 python3-feedparser gnupg2
+            DEBIAN_FRONTEND=noninteractive apt-get install -y git ssh ruby-dev rubygems build-essential fakeroot python-all python3-all python3-stdeb python3-pyqt5 python3-feedparser gnupg2 dh-python
             gem install --no-ri --no-rdoc rake
             gem install --no-ri --no-rdoc package_cloud
       - checkout
